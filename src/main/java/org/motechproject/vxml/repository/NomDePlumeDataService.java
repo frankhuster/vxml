@@ -1,6 +1,6 @@
-package org.motechproject.sample.repository;
+package org.motechproject.vxml.repository;
 
-import org.motechproject.sample.domain.NomDePlume;
+import org.motechproject.vxml.domain.NomDePlume;
 import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;

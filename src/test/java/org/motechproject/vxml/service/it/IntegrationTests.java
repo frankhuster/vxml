@@ -1,4 +1,4 @@
-package org.motechproject.sample.service.it;
+package org.motechproject.vxml.service.it;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

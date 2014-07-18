@@ -1,14 +1,14 @@
-package org.motechproject.sample.service.it;
+package org.motechproject.vxml.service.it;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.sample.domain.Author;
-import org.motechproject.sample.domain.Bio;
-import org.motechproject.sample.domain.Book;
-import org.motechproject.sample.domain.NomDePlume;
-import org.motechproject.sample.repository.*;
-import org.motechproject.sample.service.AuthorService;
+import org.motechproject.vxml.domain.Author;
+import org.motechproject.vxml.domain.Bio;
+import org.motechproject.vxml.domain.Book;
+import org.motechproject.vxml.domain.NomDePlume;
+import org.motechproject.vxml.repository.*;
+import org.motechproject.vxml.service.AuthorService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;

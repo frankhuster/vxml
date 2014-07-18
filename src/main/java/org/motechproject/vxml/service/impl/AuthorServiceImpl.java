@@ -1,9 +1,9 @@
-package org.motechproject.sample.service.impl;
+package org.motechproject.vxml.service.impl;
 
-import org.motechproject.sample.domain.Author;
-import org.motechproject.sample.domain.Book;
-import org.motechproject.sample.repository.AuthorDataService;
-import org.motechproject.sample.service.AuthorService;
+import org.motechproject.vxml.domain.Author;
+import org.motechproject.vxml.domain.Book;
+import org.motechproject.vxml.repository.AuthorDataService;
+import org.motechproject.vxml.service.AuthorService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Implementation of the {@link org.motechproject.sample.service.AuthorService} interface. Uses
- * {@link org.motechproject.sample.repository.AuthorDataService} in order to retrieve and persist authors.
+ * Implementation of the {@link org.motechproject.vxml.service.AuthorService} interface. Uses
+ * {@link org.motechproject.vxml.repository.AuthorDataService} in order to retrieve and persist authors.
  */
 @Service("authorService")
 public class AuthorServiceImpl implements AuthorService {

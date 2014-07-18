@@ -1,4 +1,4 @@
-package org.motechproject.sample.domain;
+package org.motechproject.vxml.domain;
 
 import org.motechproject.mds.annotations.Entity;
 

@@ -1,7 +1,7 @@
-package org.motechproject.sample.service;
+package org.motechproject.vxml.service;
 
-import org.motechproject.sample.domain.Author;
-import org.motechproject.sample.domain.Book;
+import org.motechproject.vxml.domain.Author;
+import org.motechproject.vxml.domain.Book;
 
 import java.util.List;
 

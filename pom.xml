@@ -6,10 +6,10 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.motechproject</groupId>
-    <artifactId>sample</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <artifactId>VXML</artifactId>
+    <version>0.25-SNAPSHOT</version>
     <packaging>bundle</packaging>
-    <name>Sample Module</name>
+    <name>VXML Module</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -155,9 +155,9 @@
                         <Resource-Path>resources</Resource-Path>
                         <Context-File>META-INF/motech/applicationContext.xml</Context-File>
                         <Export-Package>
-                            org.motechproject.sample.service;version=${project.version},
-                            org.motechproject.sample.repository;version=${project.version},
-                            org.motechproject.sample.domain;version=${project.version},
+                            org.motechproject.vxml.service;version=${project.version},
+                            org.motechproject.vxml.repository;version=${project.version},
+                            org.motechproject.vxml.domain;version=${project.version},
                         </Export-Package>
                         <Import-Package>*</Import-Package>
                     </instructions>

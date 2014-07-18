@@ -1,6 +1,6 @@
-package org.motechproject.sample.repository;
+package org.motechproject.vxml.repository;
 
-import org.motechproject.sample.domain.Author;
+import org.motechproject.vxml.domain.Author;
 import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;

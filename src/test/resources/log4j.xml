@@ -10,7 +10,7 @@
         </layout>
     </appender>
 
-    <logger name="org.motechproject.sample">
+    <logger name="org.motechproject.vxml">
         <level value="ALL"/>
     </logger>
     <root>
