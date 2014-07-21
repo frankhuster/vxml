@@ -9,9 +9,9 @@
 
     <import resource="classpath*:META-INF/motech/*.xml" />
 
-    <osgi:service ref="authorService" interface="org.motechproject.vxml.service.AuthorService" />
+    <osgi:service ref="authorService" interface="org.motechproject.vxml.service.CallRecordService" />
 
-    <osgi:reference id="authorDataService" interface="org.motechproject.vxml.repository.AuthorDataService" />
+    <osgi:reference id="authorDataService" interface="org.motechproject.vxml.repository.CallRecordDataService" />
     <osgi:reference id="bookDataService" interface="org.motechproject.vxml.repository.BookDataService" />
     <osgi:reference id="nomDePlumeDataService" interface="org.motechproject.vxml.repository.NomDePlumeDataService" />
 

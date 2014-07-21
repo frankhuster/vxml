@@ -3,12 +3,12 @@ package org.motechproject.vxml.service.it;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.vxml.domain.Author;
+import org.motechproject.vxml.domain.CallRecord;
 import org.motechproject.vxml.domain.Bio;
 import org.motechproject.vxml.domain.Book;
 import org.motechproject.vxml.domain.NomDePlume;
 import org.motechproject.vxml.repository.*;
-import org.motechproject.vxml.service.AuthorService;
+import org.motechproject.vxml.service.CallRecordService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
@@ -36,9 +36,9 @@ public class AuthorServiceIT extends BasePaxIT {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Inject
-    private AuthorService authorService;
+    private CallRecordService callRecordService;
     @Inject
-    private AuthorDataService authorDataService;
+    private CallRecordDataService callRecordDataService;
     @Inject
     private BioDataService bioDataService;
     @Inject
@@ -53,7 +53,7 @@ public class AuthorServiceIT extends BasePaxIT {
     @Before
     public void cleanupDatabase() {
         logger.info("cleanupDatabase");
-        try { authorDataService.deleteAll(); } catch (JDOException e) { }
+        try { callRecordDataService.deleteAll(); } catch (JDOException e) { }
         try { bioDataService.deleteAll(); } catch (JDOException e) { }
         try { bookDataService.deleteAll(); } catch (JDOException e) { }
         try { nomDePlumeDataService.deleteAll(); } catch (JDOException e) { }
@@ -66,13 +66,13 @@ public class AuthorServiceIT extends BasePaxIT {
 
         logger.info("verifyCreatingSimpleAuthor");
 
-        Author ernest = authorDataService.create(new Author("Ernest"));
+        CallRecord ernest = callRecordDataService.create(new CallRecord("Ernest"));
         logger.info("created {}", ernest);
 
-        Author author = authorService.findAuthorByName(ernest.getName());
-        logger.info("found {}", author);
+        CallRecord callRecord = callRecordService.findAuthorByName(ernest.getName());
+        logger.info("found {}", callRecord);
 
-        assertEquals(author, ernest);
+        assertEquals(callRecord, ernest);
     }
 
     @Test
@@ -80,17 +80,17 @@ public class AuthorServiceIT extends BasePaxIT {
 
         logger.info("verifyCreatingComplexAuthor");
 
-        Author ernest = new Author("Ernest");
+        CallRecord ernest = new CallRecord("Ernest");
         ernest.setBio(new Bio("Born in Illinois..."));
         ernest.setBooks(Arrays.asList(new Book("Book1"), new Book("Book2")));
         ernest.setNomsDePlume(Arrays.asList(new NomDePlume("Nom2"), new NomDePlume("Nom3")));
-        ernest = authorDataService.create(ernest);
+        ernest = callRecordDataService.create(ernest);
         logger.info("created {}", ernest);
 
-        Author author = authorService.findAuthorByName(ernest.getName());
-        logger.info("found {}", author);
+        CallRecord callRecord = callRecordService.findAuthorByName(ernest.getName());
+        logger.info("found {}", callRecord);
 
-        assertEquals(author, ernest);
+        assertEquals(callRecord, ernest);
     }
 
     @Test
@@ -100,12 +100,12 @@ public class AuthorServiceIT extends BasePaxIT {
 
         Book b1 = bookDataService.create(new Book("The old man and the sea"));
         Book b2 = bookDataService.create(new Book("For whom the bell tolls"));
-        Author ernest = authorDataService.create(new Author("Ernest", null, Arrays.asList(b1, b2), null));
+        CallRecord ernest = callRecordDataService.create(new CallRecord("Ernest", null, Arrays.asList(b1, b2), null));
 
-        Author author = authorService.findAuthorByName(ernest.getName());
-        assertEquals(ernest, author);
+        CallRecord callRecord = callRecordService.findAuthorByName(ernest.getName());
+        assertEquals(ernest, callRecord);
 
-        authorService.delete(author);
+        callRecordService.delete(callRecord);
         List<Book> books = bookDataService.retrieveAll();
         assertEquals(0, books.size());
     }
@@ -115,7 +115,7 @@ public class AuthorServiceIT extends BasePaxIT {
 
         logger.info("shouldNotCreateDuplicates");
 
-        Author ernest = authorDataService.create(new Author("Ernest"));
-        Author ernestAlso = authorDataService.create(new Author("Ernest"));
+        CallRecord ernest = callRecordDataService.create(new CallRecord("Ernest"));
+        CallRecord ernestAlso = callRecordDataService.create(new CallRecord("Ernest"));
     }
 }
