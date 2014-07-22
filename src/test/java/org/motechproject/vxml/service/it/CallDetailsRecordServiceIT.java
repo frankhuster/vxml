@@ -5,9 +5,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
-import org.motechproject.vxml.domain.CallRecord;
-import org.motechproject.vxml.repository.CallRecordDataService;
-import org.motechproject.vxml.service.CallRecordService;
+import org.motechproject.vxml.domain.CallDetailsRecord;
+import org.motechproject.vxml.repository.CallDetailsRecordDataService;
+import org.motechproject.vxml.service.CallDetailsRecordService;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
@@ -28,19 +28,19 @@ import static org.junit.Assert.assertEquals;
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
-public class CallRecordServiceIT extends BasePaxIT {
+public class CallDetailsRecordServiceIT extends BasePaxIT {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Inject
-    private CallRecordService callRecordService;
+    private CallDetailsRecordService callDetailsRecordService;
     @Inject
-    private CallRecordDataService callRecordDataService;
+    private CallDetailsRecordDataService callDetailsRecordDataService;
 
     @Before
     public void cleanupDatabase() {
         logger.info("cleanupDatabase");
-        try { callRecordDataService.deleteAll(); } catch (JDOException e) { }
+        try { callDetailsRecordDataService.deleteAll(); } catch (JDOException e) { }
     }
 
     @Test
@@ -49,12 +49,12 @@ public class CallRecordServiceIT extends BasePaxIT {
         logger.info("verifyServiceFunctional");
 
         String motechId = UUID.randomUUID().toString();
-        callRecordService.logCallStatusFromMotech("from", "to", "status", motechId);
+        callDetailsRecordService.logCallStatusFromMotech("from", "to", "status", motechId);
         logger.info("created call record with motechID {}", motechId);
 
-        List<CallRecord> callRecords = callRecordDataService.findByMotechId(motechId);
-        assertEquals(1, callRecords.size());
-        assertEquals(motechId, callRecords.get(0).getMotechId());
-        logger.info("found call record with motechID {}", callRecords.get(0).getMotechId());
+        List<CallDetailsRecord> callDetailsRecords = callDetailsRecordDataService.findByMotechId(motechId);
+        assertEquals(1, callDetailsRecords.size());
+        assertEquals(motechId, callDetailsRecords.get(0).getMotechId());
+        logger.info("found call record with motechID {}", callDetailsRecords.get(0).getMotechId());
     }
 }

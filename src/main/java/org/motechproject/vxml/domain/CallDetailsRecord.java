@@ -5,7 +5,7 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 @Entity
-public class CallRecord {
+public class CallDetailsRecord {
 
     @Field(required = true)
     private DateTime timestamp;
@@ -28,7 +28,7 @@ public class CallRecord {
     @Field
     private String providerData;
 
-    public CallRecord(DateTime timestamp, String from, String to, String status, String motechId, String providerId, String providerData) {
+    public CallDetailsRecord(DateTime timestamp, String from, String to, String status, String motechId, String providerId, String providerData) {
         this.timestamp = timestamp;
         this.from = from;
         this.to = to;
@@ -97,9 +97,9 @@ public class CallRecord {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof CallRecord)) return false;
+        if (!(o instanceof CallDetailsRecord)) return false;
 
-        CallRecord that = (CallRecord) o;
+        CallDetailsRecord that = (CallDetailsRecord) o;
 
         if (from != null ? !from.equals(that.from) : that.from != null) return false;
         if (motechId != null ? !motechId.equals(that.motechId) : that.motechId != null) return false;
