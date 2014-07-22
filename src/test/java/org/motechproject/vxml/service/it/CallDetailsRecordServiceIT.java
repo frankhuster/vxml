@@ -48,13 +48,37 @@ public class CallDetailsRecordServiceIT extends BasePaxIT {
 
         logger.info("verifyServiceFunctional");
 
+        //
+        // logCallStatusFromMotech
+        //
         String motechId = UUID.randomUUID().toString();
         callDetailsRecordService.logCallStatusFromMotech("from", "to", "status", motechId);
         logger.info("created call record with motechID {}", motechId);
-
         List<CallDetailsRecord> callDetailsRecords = callDetailsRecordDataService.findByMotechId(motechId);
         assertEquals(1, callDetailsRecords.size());
         assertEquals(motechId, callDetailsRecords.get(0).getMotechId());
         logger.info("found call record with motechID {}", callDetailsRecords.get(0).getMotechId());
+
+        //
+        // logCallStatusFromMotech
+        //
+        motechId = UUID.randomUUID().toString();
+        callDetailsRecordService.logCallStatusFromMotech("from", "to", "status-1", motechId);
+        logger.info("created call record with motechID {}", motechId);
+
+        String providerId = "SOMEPROVIDER-" + UUID.randomUUID().toString();
+        callDetailsRecordService.logCallStatusFromProvider("from", "to", "status-2", motechId, providerId, "data-1");
+        logger.info("created call record with motechID {} & providerId {}", motechId, providerId);
+
+        callDetailsRecordService.logCallStatusFromProvider("from", "to", "status-3", null, providerId, "data-2");
+        logger.info("created call record with providerId {}", providerId);
+
+        callDetailsRecords = callDetailsRecordDataService.findByProviderId(providerId);
+        assertEquals(2, callDetailsRecords.size());
+        assertEquals(motechId, callDetailsRecords.get(0).getMotechId());
+        assertEquals(motechId, callDetailsRecords.get(1).getMotechId());
+        assertEquals(providerId, callDetailsRecords.get(0).getProviderId());
+        assertEquals(providerId, callDetailsRecords.get(1).getProviderId());
+        logger.info("found call details record(s) with providerID {}: {}", providerId, callDetailsRecords.toString());
     }
 }

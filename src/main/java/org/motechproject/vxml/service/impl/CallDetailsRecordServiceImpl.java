@@ -23,14 +23,9 @@ public class CallDetailsRecordServiceImpl implements CallDetailsRecordService {
     @Override
     public void logCallStatusFromProvider(String from, String to, String status, String motechId, String providerId,
                                           String providerData) {
-        List<CallDetailsRecord> callDetailsRecords = null;
-
-        if (StringUtils.isNotBlank(motechId)) {
-            callDetailsRecords = callDetailsRecordDataService.findByMotechId(motechId);
-            providerId = callDetailsRecords.get(0).getProviderId();
-        }
-        if (StringUtils.isNotBlank(providerId) && callDetailsRecords != null &&  callDetailsRecords.size() == 0) {
-            callDetailsRecords = callDetailsRecordDataService.findByProviderId(providerId);
+        List<CallDetailsRecord> callDetailsRecords = callDetailsRecords = callDetailsRecordDataService.findByProviderId(
+                providerId);
+        if (callDetailsRecords.size() > 0 && StringUtils.isNotBlank(callDetailsRecords.get(0).getMotechId())) {
             motechId = callDetailsRecords.get(0).getMotechId();
         }
         callDetailsRecordDataService.create(new CallDetailsRecord(DateTime.now(), from, to, status, motechId, providerId,
