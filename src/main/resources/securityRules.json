@@ -1,0 +1,16 @@
+[
+    {
+        "pattern": "/**/vxml/status/**",
+        "supportedSchemes": [
+            "NO_SECURITY"
+        ],
+        "protocol": "HTTP",
+        "priority": 2,
+        "rest": true,
+        "origin": "SYSTEM_MODULE_VXML",
+        "version": "0.25",
+        "methodsRequired": [
+            "ANY"
+        ]
+    }
+]
