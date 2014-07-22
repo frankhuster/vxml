@@ -17,7 +17,10 @@ public class CallDetailsRecord {
     private String to;
 
     @Field
-    private String status;
+    private CallStatus callStatus;
+
+    @Field
+    private String providerStatus;
 
     @Field
     private String motechId;
@@ -28,11 +31,13 @@ public class CallDetailsRecord {
     @Field
     private String providerData;
 
-    public CallDetailsRecord(DateTime timestamp, String from, String to, String status, String motechId, String providerId, String providerData) {
+    public CallDetailsRecord(DateTime timestamp, String from, String to, CallStatus callStatus, String providerStatus,
+                             String motechId, String providerId, String providerData) {
         this.timestamp = timestamp;
         this.from = from;
         this.to = to;
-        this.status = status;
+        this.callStatus = callStatus;
+        this.providerStatus = providerStatus;
         this.motechId = motechId;
         this.providerId = providerId;
         this.providerData = providerData;
@@ -62,12 +67,20 @@ public class CallDetailsRecord {
         this.to = to;
     }
 
-    public String getStatus() {
-        return status;
+    public CallStatus getCallStatus() {
+        return callStatus;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setCallStatus(CallStatus callStatus) {
+        this.callStatus = callStatus;
+    }
+
+    public String getProviderStatus() {
+        return providerStatus;
+    }
+
+    public void setProviderStatus(String providerStatus) {
+        this.providerStatus = providerStatus;
     }
 
     public String getMotechId() {
@@ -101,11 +114,13 @@ public class CallDetailsRecord {
 
         CallDetailsRecord that = (CallDetailsRecord) o;
 
+        if (callStatus != that.callStatus) return false;
         if (from != null ? !from.equals(that.from) : that.from != null) return false;
         if (motechId != null ? !motechId.equals(that.motechId) : that.motechId != null) return false;
         if (providerData != null ? !providerData.equals(that.providerData) : that.providerData != null) return false;
         if (providerId != null ? !providerId.equals(that.providerId) : that.providerId != null) return false;
-        if (status != null ? !status.equals(that.status) : that.status != null) return false;
+        if (providerStatus != null ? !providerStatus.equals(that.providerStatus) : that.providerStatus != null)
+            return false;
         if (!timestamp.equals(that.timestamp)) return false;
         if (to != null ? !to.equals(that.to) : that.to != null) return false;
 
@@ -117,7 +132,8 @@ public class CallDetailsRecord {
         int result = timestamp.hashCode();
         result = 31 * result + (from != null ? from.hashCode() : 0);
         result = 31 * result + (to != null ? to.hashCode() : 0);
-        result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (callStatus != null ? callStatus.hashCode() : 0);
+        result = 31 * result + (providerStatus != null ? providerStatus.hashCode() : 0);
         result = 31 * result + (motechId != null ? motechId.hashCode() : 0);
         result = 31 * result + (providerId != null ? providerId.hashCode() : 0);
         result = 31 * result + (providerData != null ? providerData.hashCode() : 0);
@@ -126,11 +142,12 @@ public class CallDetailsRecord {
 
     @Override
     public String toString() {
-        return "CallRecord{" +
+        return "CallDetailsRecord{" +
                 "timestamp=" + timestamp +
                 ", from='" + from + '\'' +
                 ", to='" + to + '\'' +
-                ", status='" + status + '\'' +
+                ", callStatus=" + callStatus +
+                ", providerStatus='" + providerStatus + '\'' +
                 ", motechId='" + motechId + '\'' +
                 ", providerId='" + providerId + '\'' +
                 ", providerData='" + providerData + '\'' +

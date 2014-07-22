@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.vxml.domain.CallDetailsRecord;
+import org.motechproject.vxml.domain.CallStatus;
 import org.motechproject.vxml.repository.CallDetailsRecordDataService;
 import org.motechproject.vxml.service.CallDetailsRecordService;
 import org.ops4j.pax.exam.ExamFactory;
@@ -52,7 +53,7 @@ public class CallDetailsRecordServiceIT extends BasePaxIT {
         // logCallStatusFromMotech
         //
         String motechId = UUID.randomUUID().toString();
-        callDetailsRecordService.logCallStatusFromMotech("from", "to", "status", motechId);
+        callDetailsRecordService.logCallStatusFromMotech("from", "to", CallStatus.IN_PROGRESS, motechId);
         logger.info("created call record with motechID {}", motechId);
         List<CallDetailsRecord> callDetailsRecords = callDetailsRecordDataService.findByMotechId(motechId);
         assertEquals(1, callDetailsRecords.size());
@@ -63,14 +64,16 @@ public class CallDetailsRecordServiceIT extends BasePaxIT {
         // logCallStatusFromMotech
         //
         motechId = UUID.randomUUID().toString();
-        callDetailsRecordService.logCallStatusFromMotech("from", "to", "status-1", motechId);
+        callDetailsRecordService.logCallStatusFromMotech("from", "to", CallStatus.IN_PROGRESS, motechId);
         logger.info("created call record with motechID {}", motechId);
 
         String providerId = "SOMEPROVIDER-" + UUID.randomUUID().toString();
-        callDetailsRecordService.logCallStatusFromProvider("from", "to", "status-2", motechId, providerId, "data-1");
+        callDetailsRecordService.logCallStatusFromProvider("from", "to", CallStatus.BUSY, "Busy", motechId, providerId,
+                "data-1");
         logger.info("created call record with motechID {} & providerId {}", motechId, providerId);
 
-        callDetailsRecordService.logCallStatusFromProvider("from", "to", "status-3", null, providerId, "data-2");
+        callDetailsRecordService.logCallStatusFromProvider("from", "to", CallStatus.ANSWERED, "Answered", null,
+                providerId, "data-2");
         logger.info("created call record with providerId {}", providerId);
 
         callDetailsRecords = callDetailsRecordDataService.findByProviderId(providerId);
