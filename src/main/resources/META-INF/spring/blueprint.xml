@@ -9,13 +9,8 @@
 
     <import resource="classpath*:META-INF/motech/*.xml" />
 
-    <osgi:service ref="authorService" interface="org.motechproject.vxml.service.CallRecordService" />
+    <osgi:service ref="callRecordService" interface="org.motechproject.vxml.service.CallRecordService" />
 
-    <osgi:reference id="authorDataService" interface="org.motechproject.vxml.repository.CallRecordDataService" />
-    <osgi:reference id="bookDataService" interface="org.motechproject.vxml.repository.BookDataService" />
-    <osgi:reference id="nomDePlumeDataService" interface="org.motechproject.vxml.repository.NomDePlumeDataService" />
-
-    <osgi:reference id="agentDataService" interface="org.motechproject.vxml.repository.SpyDataService" />
-    <osgi:reference id="secretDataService" interface="org.motechproject.vxml.repository.SecretDataService" />
+    <osgi:reference id="callRecordDataService" interface="org.motechproject.vxml.repository.CallRecordDataService" />
 
 </beans>

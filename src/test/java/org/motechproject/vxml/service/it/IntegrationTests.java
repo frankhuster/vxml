@@ -7,6 +7,6 @@ import org.junit.runners.Suite;
  * TODO
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({AuthorServiceIT.class})
+@Suite.SuiteClasses({CallRecordServiceIT.class})
 public class IntegrationTests {
 }
