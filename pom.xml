@@ -151,8 +151,7 @@
                 <configuration>
                     <instructions>
                         <Blueprint-Enabled>true</Blueprint-Enabled>
-                        <Resource-Path>resources</Resource-Path>
-                        <Context-File>META-INF/motech/applicationContext.xml</Context-File>
+                        <Context-Path>vxml</Context-Path>
                         <Export-Package>
                             org.motechproject.vxml.service;version=${project.version},
                             org.motechproject.vxml.repository;version=${project.version},

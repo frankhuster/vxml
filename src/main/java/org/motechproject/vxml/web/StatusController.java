@@ -20,8 +20,8 @@ public class StatusController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     @RequestMapping(value = "/{config}")
-    public void handle(@PathVariable String configName, @RequestParam Map<String, String> params) {
-        logger.info("Status - config = {}, params = {}", configName, params);
+    public void handle(@PathVariable String config, @RequestParam Map<String, String> params) {
+        logger.info("Status - config = {}, params = {}", config, params);
         // todo
     }
 }
