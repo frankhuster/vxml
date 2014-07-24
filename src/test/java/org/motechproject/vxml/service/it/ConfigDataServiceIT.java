@@ -50,10 +50,12 @@ public class ConfigDataServiceIT extends BasePaxIT {
         Map<String, String> callDetailMap = new HashMap<>();
         callDetailMap.put("recipient", "to");
 
-        Config myConfig = new Config("MyConfig", statusMap, callDetailMap);
-        configDataService.create(myConfig);
+        configDataService.create(new Config("MyConfig", statusMap, callDetailMap));
 
         Config config = configDataService.findByName("MyConfig");
-        assertEquals(config, myConfig);
+        assertEquals(config.name, "MyConfig");
+        assertEquals(config.callDetailMap, callDetailMap);
+        // Why oh why does this not work?!?
+        assertEquals(config.statusMap, statusMap);
     }
 }
