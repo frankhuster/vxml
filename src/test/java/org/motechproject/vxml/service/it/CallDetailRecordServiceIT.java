@@ -66,8 +66,8 @@ public class CallDetailRecordServiceIT extends BasePaxIT {
         logger.info("created call record with motechCallId {}", motechCallId);
         List<CallDetailRecord> callDetailRecords = callDetailRecordDataService.findByMotechCallId(motechCallId);
         assertEquals(1, callDetailRecords.size());
-        assertEquals(motechCallId, callDetailRecords.get(0).getMotechCallId());
-        logger.info("found call record with motechCallId {}", callDetailRecords.get(0).getMotechCallId());
+        assertEquals(motechCallId, callDetailRecords.get(0).motechCallId);
+        logger.info("found call record with motechCallId {}", callDetailRecords.get(0).motechCallId);
 
         //
         // logFromProvider
@@ -87,10 +87,10 @@ public class CallDetailRecordServiceIT extends BasePaxIT {
 
         callDetailRecords = callDetailRecordDataService.findByProviderCallId(providerCallId);
         assertEquals(2, callDetailRecords.size());
-        assertEquals(motechCallId, callDetailRecords.get(0).getMotechCallId());
-        assertEquals(motechCallId, callDetailRecords.get(1).getMotechCallId());
-        assertEquals(providerCallId, callDetailRecords.get(0).getProviderCallId());
-        assertEquals(providerCallId, callDetailRecords.get(1).getProviderCallId());
+        assertEquals(motechCallId, callDetailRecords.get(0).motechCallId);
+        assertEquals(motechCallId, callDetailRecords.get(1).motechCallId);
+        assertEquals(providerCallId, callDetailRecords.get(0).providerCallId);
+        assertEquals(providerCallId, callDetailRecords.get(1).providerCallId);
         logger.info("found call details record(s) with providerCallId {}: {}", providerCallId,
                 callDetailRecords.toString());
     }

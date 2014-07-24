@@ -6,9 +6,7 @@ import org.junit.runner.RunWith;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.vxml.domain.CallDetailRecord;
-import org.motechproject.vxml.domain.CallStatus;
 import org.motechproject.vxml.repository.CallDetailRecordDataService;
-import org.motechproject.vxml.service.CallDetailRecordService;
 import org.motechproject.vxml.service.OutboundCallService;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -19,10 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.jdo.JDOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
@@ -56,6 +51,6 @@ public class OutboundCallServiceIT extends BasePaxIT {
 
         List<CallDetailRecord> callDetailRecords = callDetailRecordDataService.retrieveAll();
         assertEquals(1, callDetailRecords.size());
-        assertEquals("config123", callDetailRecords.get(0).getConfig());
+        assertEquals("config123", callDetailRecords.get(0).config);
     }
 }

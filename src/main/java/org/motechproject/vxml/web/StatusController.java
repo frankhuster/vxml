@@ -22,6 +22,6 @@ public class StatusController {
     @RequestMapping(value = "/{config}")
     public void handle(@PathVariable String config, @RequestParam Map<String, String> params) {
         logger.info("Status - config = {}, params = {}", config, params);
-        // todo
+
     }
 }

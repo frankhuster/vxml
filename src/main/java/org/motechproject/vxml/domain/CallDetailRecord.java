@@ -4,113 +4,47 @@ import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Entity
 public class CallDetailRecord {
 
     @Field(required = true)
-    private DateTime timestamp;
+    public DateTime timestamp;
 
     @Field
-    private String config;
+    public String config;
 
     @Field
-    private String from;
+    public String from;
 
     @Field
-    private String to;
+    public String to;
 
     @Field
-    private CallStatus callStatus;
+    public CallStatus callStatus;
 
     @Field
-    private String providerStatus;
+    public String providerStatus;
 
     @Field
-    private String motechCallId;
+    public String motechCallId;
 
     @Field
-    private String providerCallId;
+    public String providerCallId;
 
     @Field
-    private Map<String, String> providerData;
+    public Map<String, String> providerData;
 
-    public DateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(DateTime timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public String getConfig() {
-        return config;
-    }
-
-    public void setConfig(String config) {
-        this.config = config;
-    }
-
-    public String getFrom() {
-        return from;
-    }
-
-    public void setFrom(String from) {
-        this.from = from;
-    }
-
-    public String getTo() {
-        return to;
-    }
-
-    public void setTo(String to) {
-        this.to = to;
-    }
-
-    public CallStatus getCallStatus() {
-        return callStatus;
-    }
-
-    public void setCallStatus(CallStatus callStatus) {
-        this.callStatus = callStatus;
-    }
-
-    public String getProviderStatus() {
-        return providerStatus;
-    }
-
-    public void setProviderStatus(String providerStatus) {
-        this.providerStatus = providerStatus;
-    }
-
-    public String getMotechCallId() {
-        return motechCallId;
-    }
-
-    public void setMotechCallId(String motechCallId) {
-        this.motechCallId = motechCallId;
-    }
-
-    public String getProviderCallId() {
-        return providerCallId;
-    }
-
-    public void setProviderCallId(String providerCallId) {
-        this.providerCallId = providerCallId;
-    }
-
-    public Map<String, String> getProviderData() {
-        return providerData;
-    }
-
-    public void setProviderData(Map<String, String> providerData) {
-        this.providerData = providerData;
+    public CallDetailRecord() {
+        providerData = new HashMap<>();
     }
 
     public CallDetailRecord(DateTime timestamp, String config, String from, String to, CallStatus callStatus,
                             String providerStatus, String motechCallId, String providerCallId,
                             Map<String, String> providerData) {
+        this();
         this.timestamp = timestamp;
         this.config = config;
         this.from = from;
@@ -119,7 +53,9 @@ public class CallDetailRecord {
         this.providerStatus = providerStatus;
         this.motechCallId = motechCallId;
         this.providerCallId = providerCallId;
-        this.providerData = providerData;
+        if (providerData != null) {
+            this.providerData = providerData;
+        }
     }
 
     @Override
