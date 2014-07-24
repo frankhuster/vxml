@@ -20,5 +20,6 @@
     <osgi:service ref="outboundCallService" interface="org.motechproject.vxml.service.OutboundCallService" />
 
     <osgi:reference id="callRecordDataService" interface="org.motechproject.vxml.repository.CallDetailRecordDataService" />
+    <osgi:reference id="configDataService" interface="org.motechproject.vxml.repository.ConfigDataService" />
 
 </beans>

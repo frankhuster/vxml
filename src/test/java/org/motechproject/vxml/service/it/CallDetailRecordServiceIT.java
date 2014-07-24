@@ -8,7 +8,6 @@ import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory
 import org.motechproject.vxml.domain.CallDetailRecord;
 import org.motechproject.vxml.domain.CallStatus;
 import org.motechproject.vxml.repository.CallDetailRecordDataService;
-import org.motechproject.vxml.service.CallDetailRecordService;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
@@ -26,7 +25,7 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Verify that HelloWorldAuthorService present, functional.
+ * Verify CallDetailRecordService present & functional.
  */
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -36,7 +35,7 @@ public class CallDetailRecordServiceIT extends BasePaxIT {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Inject
-    private CallDetailRecordService callDetailRecordService;
+    private org.motechproject.vxml.service.CallDetailRecordService callDetailRecordService;
     @Inject
     private CallDetailRecordDataService callDetailRecordDataService;
 
