@@ -24,9 +24,10 @@ public class ConfigHelper {
      * When receiving call detail information from an IVR provider the specific call details must be mapped from
      * what the provider sends back to MOTECH and a CallDetailRecord object. This method will find which field on the
      * given callDetailRecord matches the given key and set it to the given value. If there is no matching
-     * CallDetailRecord field, then the key/value pair is added to the providerData map field. Also, if a callStatus
-     * value does not map to an existing CallStatus, then the value of the callStatus field is set to CallStatus.UNKNOWN
-     * and the string value (with 'callStatus' key) is added to the providerData CallDetailRecord map field.
+     * CallDetailRecord field, then the key/value pair is added to the providerExtraData map field. Also, if a
+     * callStatus value does not map to an existing CallStatus, then the value of the callStatus field is set to
+     * CallStatus.UNKNOWN and the string value (with 'callStatus' key) is added to the providerExtraData
+     * CallDetailRecord map field.
      *
      * @param config
      * @param key
@@ -49,7 +50,7 @@ public class ConfigHelper {
                     object = mapStatus(config, value);
                     if (CallStatus.UNKNOWN.equals(object)) {
                         // Always add unknown call status to the provider extra data, for inspection
-                        callDetailRecord.providerData.put(fieldName, value);
+                        callDetailRecord.providerExtraData.put(fieldName, value);
                     }
                 }
                 else {
@@ -63,7 +64,7 @@ public class ConfigHelper {
                         fieldName, e));
             }
         } catch (NoSuchFieldException e) {
-            callDetailRecord.providerData.put(fieldName, value);
+            callDetailRecord.providerExtraData.put(fieldName, value);
         }
     }
 }

@@ -21,5 +21,6 @@
 
     <osgi:reference id="callRecordDataService" interface="org.motechproject.vxml.repository.CallDetailRecordDataService" />
     <osgi:reference id="configDataService" interface="org.motechproject.vxml.repository.ConfigDataService" />
+    <osgi:reference id="statusMessageService" interface="org.motechproject.admin.service.StatusMessageService"/>
 
 </beans>

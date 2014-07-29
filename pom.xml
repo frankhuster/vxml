@@ -121,6 +121,14 @@
             <version>4.9-r027</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- MOTECH -->
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-admin</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+
     </dependencies>
 
     <repositories>

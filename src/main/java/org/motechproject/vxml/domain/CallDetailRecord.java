@@ -35,15 +35,15 @@ public class CallDetailRecord {
     public String providerCallId;
 
     @Field
-    public Map<String, String> providerData;
+    public Map<String, String> providerExtraData;
 
     public CallDetailRecord() {
-        providerData = new HashMap<>();
+        providerExtraData = new HashMap<>();
     }
 
     public CallDetailRecord(DateTime timestamp, String config, String from, String to, CallStatus callStatus,
                             String providerStatus, String motechCallId, String providerCallId,
-                            Map<String, String> providerData) {
+                            Map<String, String> providerExtraData) {
         this();
         this.timestamp = timestamp;
         this.config = config;
@@ -53,8 +53,8 @@ public class CallDetailRecord {
         this.providerStatus = providerStatus;
         this.motechCallId = motechCallId;
         this.providerCallId = providerCallId;
-        if (providerData != null) {
-            this.providerData = providerData;
+        if (providerExtraData != null) {
+            this.providerExtraData = providerExtraData;
         }
     }
 
@@ -71,7 +71,8 @@ public class CallDetailRecord {
         if (motechCallId != null ? !motechCallId.equals(that.motechCallId) : that.motechCallId != null) return false;
         if (providerCallId != null ? !providerCallId.equals(that.providerCallId) : that.providerCallId != null)
             return false;
-        if (providerData != null ? !providerData.equals(that.providerData) : that.providerData != null) return false;
+        if (providerExtraData != null ? !providerExtraData.equals(that.providerExtraData) :
+                that.providerExtraData != null) return false;
         if (providerStatus != null ? !providerStatus.equals(that.providerStatus) : that.providerStatus != null)
             return false;
         if (!timestamp.equals(that.timestamp)) return false;
@@ -90,7 +91,7 @@ public class CallDetailRecord {
         result = 31 * result + (providerStatus != null ? providerStatus.hashCode() : 0);
         result = 31 * result + (motechCallId != null ? motechCallId.hashCode() : 0);
         result = 31 * result + (providerCallId != null ? providerCallId.hashCode() : 0);
-        result = 31 * result + (providerData != null ? providerData.hashCode() : 0);
+        result = 31 * result + (providerExtraData != null ? providerExtraData.hashCode() : 0);
         return result;
     }
 
@@ -105,7 +106,7 @@ public class CallDetailRecord {
                 ", providerStatus='" + providerStatus + '\'' +
                 ", motechCallId='" + motechCallId + '\'' +
                 ", providerCallId='" + providerCallId + '\'' +
-                ", providerData=" + providerData +
+                ", providerExtraData=" + providerExtraData +
                 '}';
     }
 }

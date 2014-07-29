@@ -12,6 +12,9 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * todo
+ */
 public class ConfigHelperTest {
 
     private Config config;
@@ -39,8 +42,8 @@ public class ConfigHelperTest {
         CallDetailRecord callDetailRecord = new CallDetailRecord();
         ConfigHelper.setCallDetail(config, "callStatus", "fubar", callDetailRecord);
         assertEquals(CallStatus.UNKNOWN, callDetailRecord.callStatus);
-        assertTrue(callDetailRecord.providerData.containsKey("callStatus"));
-        assertEquals("fubar", callDetailRecord.providerData.get("callStatus"));
+        assertTrue(callDetailRecord.providerExtraData.containsKey("callStatus"));
+        assertEquals("fubar", callDetailRecord.providerExtraData.get("callStatus"));
     }
 
     @Test
@@ -51,10 +54,10 @@ public class ConfigHelperTest {
     }
 
     @Test
-    public void shouldSetCallDetailAsProviderData() {
+    public void shouldSetCallDetailAsProviderExtraData() {
         CallDetailRecord callDetailRecord = new CallDetailRecord();
         ConfigHelper.setCallDetail(config, "provider-specific-stuff", "specific-value", callDetailRecord);
-        assertTrue(callDetailRecord.providerData.containsKey("provider-specific-stuff"));
-        assertEquals("specific-value", callDetailRecord.providerData.get("provider-specific-stuff"));
+        assertTrue(callDetailRecord.providerExtraData.containsKey("provider-specific-stuff"));
+        assertEquals("specific-value", callDetailRecord.providerExtraData.get("provider-specific-stuff"));
     }
 }
