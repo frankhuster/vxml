@@ -31,18 +31,9 @@ public class Config {
         if (this == o) return true;
         if (!(o instanceof Config)) return false;
 
-        Config config = (Config) o;
-
         //todo: I'm using a string compare because comparing the statusMap field (of type Map<String, CallStatus>) fails
+        //todo: change to a proper full fledged equals when https://applab.atlassian.net/browse/MOTECH-1186 is fixed
         return this.toString().equals(o.toString());
-
-//        if (!name.equals(config.name)) return false;
-//todo:   why does the comparison below fail when comparing two configs where one is loaded from the DB and one is
-//todo:   created in memory?!? Argh!
-//        if (!statusMap.equals(config.statusMap)) return false;
-//        if (!callDetailMap.equals(config.callDetailMap)) return false;
-//
-//        return true;
     }
 
     @Override
