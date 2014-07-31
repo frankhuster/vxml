@@ -1,5 +1,6 @@
 [
     {
+        "active": true,
         "pattern": "/**/vxml/status/**",
         "supportedSchemes": [
             "NO_SECURITY"

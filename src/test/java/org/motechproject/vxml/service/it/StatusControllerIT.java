@@ -48,7 +48,7 @@ public class StatusControllerIT extends BasePaxIT {
     public void verifyControllerFunctional() throws Exception {
         logger.info("verifyControllerFunctional");
 
-        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/module/vxml/status/foo", TestContext.getJettyPort()));
+        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/vxml/status/foo", TestContext.getJettyPort()));
 
         HttpResponse response = getHttpClient().execute(httpGet);
 

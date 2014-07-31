@@ -14,8 +14,6 @@
     <context:annotation-config/>
     <context:component-scan base-package="org.motechproject.vxml"/>
 
-    <import resource="classpath*:META-INF/motech/*.xml" />
-
     <osgi:service ref="callRecordService" interface="org.motechproject.vxml.service.CallDetailRecordService" />
     <osgi:service ref="outboundCallService" interface="org.motechproject.vxml.service.OutboundCallService" />
 
