@@ -20,6 +20,9 @@ public class Config {
     @Field
     public Map<String, String> callDetailMap = new HashMap<>();
 
+    // This constructor needed to avoid an MDS error when creating an entity using the MDS Data Browser UI...
+    public Config() {  }
+
     public Config(String name, Map<String, CallStatus> statusMap, Map<String, String> callDetailMap) {
         this.name = name;
         this.statusMap = statusMap;
