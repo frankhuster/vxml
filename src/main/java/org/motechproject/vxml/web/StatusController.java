@@ -1,6 +1,7 @@
 package org.motechproject.vxml.web;
 
 import org.motechproject.vxml.alert.MotechStatusMessage;
+import org.motechproject.vxml.domain.CallStatus;
 import org.motechproject.vxml.domain.Config;
 import org.motechproject.vxml.repository.ConfigDataService;
 import org.motechproject.vxml.service.CallDetailRecordService;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -40,5 +42,9 @@ public class StatusController {
             logger.error(msg);
             motechStatusMessage.alert(msg);
         }
+
+        // todo
+        callDetailRecordService.logFromProvider(config.name, "***from***", "***to***", CallStatus.INITIATED,
+                "***status***", "***motechCallId***", "***providerCallId***", new HashMap<String, String>());
     }
 }
