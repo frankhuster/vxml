@@ -3,6 +3,7 @@ package org.motechproject.vxml.service.it;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,7 +62,7 @@ public class StatusControllerIT extends BasePaxIT {
         configDataService.create(config);
 
         HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/vxml/status/foo", TestContext.getJettyPort()));
-        HttpResponse response = getHttpClient().execute(httpGet);
+        HttpResponse response = new DefaultHttpClient().execute(httpGet);
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
 
         List<CallDetailRecord> callDetailRecords = callDetailRecordDataService.retrieveAll();

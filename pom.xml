@@ -17,18 +17,17 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.motechproject</groupId>
-            <artifactId>motech-platform-osgi-extender-fragment</artifactId>
-            <version>${motech.version}</version>
-        </dependency>
-
         <!-- OSGi IT -->
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-pax-it</artifactId>
             <version>${motech.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-osgi-extender-fragment</artifactId>
+            <version>${motech.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.gemini</groupId>
@@ -115,6 +114,8 @@
             <artifactId>commons-codec</artifactId>
             <version>1.7</version>
         </dependency>
+
+        <!-- Testing -->
         <dependency>
             <groupId>org.junit</groupId>
             <artifactId>org.motechproject.org.junit</artifactId>
