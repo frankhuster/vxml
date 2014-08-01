@@ -3,6 +3,7 @@ package org.motechproject.vxml.service.it;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,11 +25,14 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.jdo.JDOException;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Verify StatusController present & functional.
@@ -61,11 +65,29 @@ public class StatusControllerIT extends BasePaxIT {
         Config config = new Config("foo", statusMap, callDetailMap);
         configDataService.create(config);
 
-        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/vxml/status/foo", TestContext.getJettyPort()));
+        //Create & send a CDR status callback
+        String motechCallId = UUID.randomUUID().toString();
+        URIBuilder builder = new URIBuilder();
+        builder.setScheme("http").setHost("localhost").setPort(TestContext.getJettyPort()).setPath("/vxml/status/foo")
+                .addParameter("from", "+12065551212")
+                .addParameter("to", "+12066661212")
+                .addParameter("callStatus", "ANSWERED")
+                .addParameter("providerStatus", "foo answered bar")
+                .addParameter("motechCallId", motechCallId)
+                .addParameter("providerCallId", "123456")
+                .addParameter("foo", "bar");
+        URI uri = builder.build();
+        HttpGet httpGet = new HttpGet(uri);
         HttpResponse response = new DefaultHttpClient().execute(httpGet);
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
 
-        List<CallDetailRecord> callDetailRecords = callDetailRecordDataService.retrieveAll();
-        logger.info("callDetailRecords = {}", callDetailRecords);
+        //Verify we logged this CDR - by querying on its motechId - which is a GUID
+        List<CallDetailRecord> callDetailRecords = callDetailRecordDataService.findByMotechCallId(motechCallId);
+        assertEquals(1, callDetailRecords.size());
+        CallDetailRecord callDetailRecord = callDetailRecords.get(0);
+        assertEquals(CallStatus.ANSWERED, callDetailRecord.callStatus);
+        assertEquals(1, callDetailRecord.providerExtraData.keySet().size());
+        assertTrue(callDetailRecord.providerExtraData.keySet().contains("foo"));
+        assertTrue(callDetailRecord.providerExtraData.values().contains("bar"));
     }
 }

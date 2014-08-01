@@ -16,6 +16,14 @@ public class ConfigHelper {
         if (config.statusMap.containsKey(statusString)) {
             return config.statusMap.get(statusString);
         }
+
+        try {
+            CallStatus callStatus = CallStatus.valueOf(statusString);
+            if (statusString.equals(callStatus.toString())) {
+                return callStatus;
+            }
+        } catch (IllegalArgumentException e) { }
+
         logger.warn("Unknown status string: {}", statusString);
         return CallStatus.UNKNOWN;
     }

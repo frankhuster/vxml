@@ -38,6 +38,16 @@ public class ConfigHelperTest {
     }
 
     @Test
+    public void shouldSetUnknownCallDetailStatus() {
+        CallDetailRecord callDetailRecord = new CallDetailRecord();
+        ConfigHelper.setCallDetail(config, "callStatus", "foo", callDetailRecord);
+        assertEquals(CallStatus.UNKNOWN, callDetailRecord.callStatus);
+        assertEquals(1, callDetailRecord.providerExtraData.size());
+        assertTrue(callDetailRecord.providerExtraData.keySet().contains("callStatus"));
+        assertTrue(callDetailRecord.providerExtraData.values().contains("foo"));
+    }
+
+    @Test
     public void shouldSetCallDetailStatusAsUnknown() {
         CallDetailRecord callDetailRecord = new CallDetailRecord();
         ConfigHelper.setCallDetail(config, "callStatus", "fubar", callDetailRecord);

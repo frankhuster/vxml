@@ -1,10 +1,11 @@
 package org.motechproject.vxml.web;
 
 import org.motechproject.vxml.alert.MotechStatusMessage;
-import org.motechproject.vxml.domain.CallStatus;
+import org.motechproject.vxml.config.ConfigHelper;
+import org.motechproject.vxml.domain.CallDetailRecord;
 import org.motechproject.vxml.domain.Config;
+import org.motechproject.vxml.repository.CallDetailRecordDataService;
 import org.motechproject.vxml.repository.ConfigDataService;
-import org.motechproject.vxml.service.CallDetailRecordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -24,7 +24,7 @@ public class StatusController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
-    private CallDetailRecordService callDetailRecordService;
+    private CallDetailRecordDataService callDetailRecordDataService;
     @Autowired
     private ConfigDataService configDataService;
     @Autowired
@@ -34,7 +34,7 @@ public class StatusController {
     @ResponseBody
     @RequestMapping(value = "/{configName}")
     public void handle(@PathVariable String configName, @RequestParam Map<String, String> params) {
-        logger.info("Status - configName = {}, params = {}", configName, params);
+        logger.debug("configName = {}, params = {}", configName, params);
 
         Config config = configDataService.findByName(configName);
         if (null == config){
@@ -43,8 +43,13 @@ public class StatusController {
             motechStatusMessage.alert(msg);
         }
 
-        // todo
-        callDetailRecordService.logFromProvider(config.name, "***from***", "***to***", CallStatus.INITIATED,
-                "***status***", "***motechCallId***", "***providerCallId***", new HashMap<String, String>());
+        CallDetailRecord callDetailRecord = new CallDetailRecord();
+        callDetailRecord.config = config.name;
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            ConfigHelper.setCallDetail(config, entry.getKey(), entry.getValue(), callDetailRecord);
+        }
+
+        logger.debug("Saving CallDetailRecord {}", callDetailRecord);
+        callDetailRecordDataService.create(callDetailRecord);
     }
 }
