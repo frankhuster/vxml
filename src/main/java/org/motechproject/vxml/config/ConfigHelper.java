@@ -12,6 +12,15 @@ import org.slf4j.LoggerFactory;
 public class ConfigHelper {
     private static Logger logger = LoggerFactory.getLogger(ConfigHelper.class);
 
+    /**
+     * Maps a given statusString to a CallStatus, using the given config's statusMap to first try to map the
+     * string to a status. If no match has been found in the config's statusMap tries to match the string to the literal
+     * value of the CallStatus. If all fails, return CallStatus.UNKNOWN and add a warning in the log.
+     *
+     * @param config
+     * @param statusString
+     * @return
+     */
     private static CallStatus mapStatus(Config config, String statusString) {
         if (config.statusMap.containsKey(statusString)) {
             return config.statusMap.get(statusString);
