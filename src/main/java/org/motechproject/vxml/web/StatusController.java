@@ -32,7 +32,6 @@ public class StatusController {
     @ResponseBody
     @RequestMapping(value = "/{configName}")
     public void handle(@PathVariable String configName, @RequestParam Map<String, String> params) {
-
         logger.info("Status - configName = {}, params = {}", configName, params);
 
         Config config = configDataService.findByName(configName);
