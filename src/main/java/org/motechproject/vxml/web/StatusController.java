@@ -1,7 +1,7 @@
 package org.motechproject.vxml.web;
 
-import org.motechproject.vxml.alert.MotechStatusMessage;
-import org.motechproject.vxml.config.ConfigHelper;
+import org.motechproject.vxml.service.MotechStatusMessage;
+import org.motechproject.vxml.domain.ConfigHelper;
 import org.motechproject.vxml.domain.CallDetailRecord;
 import org.motechproject.vxml.domain.Config;
 import org.motechproject.vxml.repository.CallDetailRecordDataService;

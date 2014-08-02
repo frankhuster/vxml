@@ -1,6 +1,7 @@
-package org.motechproject.vxml.alert;
+package org.motechproject.vxml.service.impl;
 
 import org.motechproject.admin.service.StatusMessageService;
+import org.motechproject.vxml.service.MotechStatusMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,8 +1,5 @@
-package org.motechproject.vxml.config;
+package org.motechproject.vxml.domain;
 
-import org.motechproject.vxml.domain.CallDetailRecord;
-import org.motechproject.vxml.domain.CallStatus;
-import org.motechproject.vxml.domain.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

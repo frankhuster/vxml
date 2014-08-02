@@ -1,4 +1,4 @@
-package org.motechproject.vxml.alert;
+package org.motechproject.vxml.service;
 
 /**
  * Helper class - Uses StatusMessageService to send system Alerts
