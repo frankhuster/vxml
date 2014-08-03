@@ -56,6 +56,25 @@ public class StatusControllerIT extends BasePaxIT {
     }
 
     @Test
+    public void shouldNotLogWhenPassedIvalidConfig() throws Exception {
+        logger.info("shouldNotLogWhenPassedIvalidConfig");
+
+        //Create & send a CDR status callback
+        String motechCallId = UUID.randomUUID().toString();
+        URIBuilder builder = new URIBuilder();
+        builder.setScheme("http").setHost("localhost").setPort(TestContext.getJettyPort())
+                .setPath("/vxml/status/fubar");
+        URI uri = builder.build();
+        HttpGet httpGet = new HttpGet(uri);
+        HttpResponse response = new DefaultHttpClient().execute(httpGet);
+        assertEquals(HttpStatus.SC_INTERNAL_SERVER_ERROR, response.getStatusLine().getStatusCode());
+
+        //Verify we did not log this CDR because it contains an invalid config
+        List<CallDetailRecord> callDetailRecords = callDetailRecordDataService.retrieveAll();
+        assertEquals(0, callDetailRecords.size());
+    }
+
+    @Test
     public void verifyControllerFunctional() throws Exception {
         logger.info("verifyControllerFunctional");
 

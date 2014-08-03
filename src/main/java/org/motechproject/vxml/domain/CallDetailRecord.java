@@ -39,6 +39,7 @@ public class CallDetailRecord {
 
     public CallDetailRecord() {
         providerExtraData = new HashMap<>();
+        callStatus = CallStatus.UNKNOWN;
     }
 
     public CallDetailRecord(DateTime timestamp, String config, String from, String to, CallStatus callStatus,
