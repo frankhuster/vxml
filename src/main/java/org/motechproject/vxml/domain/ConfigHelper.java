@@ -10,8 +10,8 @@ public class ConfigHelper {
     private static Logger logger = LoggerFactory.getLogger(ConfigHelper.class);
 
     /**
-     * Maps a given statusString to a CallStatus, using the given config's statusMap to first try to map the
-     * string to a status. If no match has been found in the config's statusMap tries to match the string to the literal
+     * Maps a given statusString to a CallStatus, using the given domain's statusMap to first try to map the
+     * string to a status. If no match has been found in the domain's statusMap tries to match the string to the literal
      * value of the CallStatus. If all fails, return CallStatus.UNKNOWN and add a warning in the log.
      *
      * @param config
@@ -37,7 +37,7 @@ public class ConfigHelper {
     /**
      * When receiving call detail information from an IVR provider the specific call details must be mapped from
      * what the provider sends back to MOTECH and a CallDetailRecord object. This method will find which field on the
-     * given callDetailRecord matches the given key and set it to the given value. If there is no matching
+     * given callDetailRecord matches the given key and set service to the given value. If there is no matching
      * CallDetailRecord field, then the key/value pair is added to the providerExtraData map field. Also, if a
      * callStatus value does not map to an existing CallStatus, then the value of the callStatus field is set to
      * CallStatus.UNKNOWN and the string value (with 'callStatus' key) is added to the providerExtraData

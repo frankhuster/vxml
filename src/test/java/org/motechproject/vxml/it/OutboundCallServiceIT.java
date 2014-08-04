@@ -1,4 +1,4 @@
-package org.motechproject.vxml.service.it;
+package org.motechproject.vxml.it;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -7,7 +7,6 @@ import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.vxml.domain.CallDetailRecord;
 import org.motechproject.vxml.repository.CallDetailRecordDataService;
-import org.motechproject.vxml.service.OutboundCallService;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;

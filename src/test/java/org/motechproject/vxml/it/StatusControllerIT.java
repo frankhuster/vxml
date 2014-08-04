@@ -1,4 +1,4 @@
-package org.motechproject.vxml.service.it;
+package org.motechproject.vxml.it;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -69,7 +69,7 @@ public class StatusControllerIT extends BasePaxIT {
         HttpResponse response = new DefaultHttpClient().execute(httpGet);
         assertEquals(HttpStatus.SC_INTERNAL_SERVER_ERROR, response.getStatusLine().getStatusCode());
 
-        //Verify we did not log this CDR because it contains an invalid config
+        //Verify we did not log this CDR because service contains an invalid domain
         List<CallDetailRecord> callDetailRecords = callDetailRecordDataService.retrieveAll();
         assertEquals(0, callDetailRecords.size());
     }
@@ -78,7 +78,7 @@ public class StatusControllerIT extends BasePaxIT {
     public void verifyControllerFunctional() throws Exception {
         logger.info("verifyControllerFunctional");
 
-        //Create a config
+        //Create a domain
         Map<String, CallStatus> statusMap = new HashMap<>();
         Map<String, String> callDetailMap = new HashMap<>();
         Config config = new Config("foo", statusMap, callDetailMap);

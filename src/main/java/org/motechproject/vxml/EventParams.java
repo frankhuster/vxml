@@ -19,7 +19,7 @@ public final class EventParams {
     /**
      * Config that was used for this message
      */
-    public static final String CONFIG = "config";
+    public static final String CONFIG = "domain";
     /**
      * Phone number that the call was issued from
      */

@@ -1,4 +1,4 @@
-package org.motechproject.vxml.service.it;
+package org.motechproject.vxml.it;
 
 import org.junit.Before;
 import org.junit.Test;

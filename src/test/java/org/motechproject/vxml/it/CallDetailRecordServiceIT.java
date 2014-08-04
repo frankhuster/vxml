@@ -1,4 +1,4 @@
-package org.motechproject.vxml.service.it;
+package org.motechproject.vxml.it;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -61,7 +61,7 @@ public class CallDetailRecordServiceIT extends BasePaxIT {
         // logFromMotech
         //
         String motechCallId = UUID.randomUUID().toString();
-        callDetailRecordService.logFromMotech("config-a", "from", "to", CallStatus.IN_PROGRESS, motechCallId);
+        callDetailRecordService.logFromMotech("domain-a", "from", "to", CallStatus.IN_PROGRESS, motechCallId);
         logger.info("created call record with motechCallId {}", motechCallId);
         List<CallDetailRecord> callDetailRecords = callDetailRecordDataService.findByMotechCallId(motechCallId);
         assertEquals(1, callDetailRecords.size());
@@ -72,15 +72,15 @@ public class CallDetailRecordServiceIT extends BasePaxIT {
         // logFromProvider
         //
         motechCallId = UUID.randomUUID().toString();
-        callDetailRecordService.logFromMotech("config-b", "from", "to", CallStatus.IN_PROGRESS, motechCallId);
+        callDetailRecordService.logFromMotech("domain-b", "from", "to", CallStatus.IN_PROGRESS, motechCallId);
         logger.info("created call record with motechCallId {}", motechCallId);
 
         String providerCallId = "SOMEPROVIDER-" + UUID.randomUUID().toString();
-        callDetailRecordService.logFromProvider("config-b", "from", "to", CallStatus.BUSY, "Busy", motechCallId,
+        callDetailRecordService.logFromProvider("domain-b", "from", "to", CallStatus.BUSY, "Busy", motechCallId,
                 providerCallId, quickieMap("foo", "bar", "baz", "bat"));
         logger.info("created call record with motechCallId {} & providerCallId {}", motechCallId, providerCallId);
 
-        callDetailRecordService.logFromProvider("config-b", "from", "to", CallStatus.ANSWERED, "Answered", null,
+        callDetailRecordService.logFromProvider("domain-b", "from", "to", CallStatus.ANSWERED, "Answered", null,
                 providerCallId, quickieMap("goo", "zar", "zaz", "zat"));
         logger.info("created call record with providerCallId {}", providerCallId);
 

@@ -1,11 +1,7 @@
-package org.motechproject.vxml.config;
+package org.motechproject.vxml.domain;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.motechproject.vxml.domain.CallDetailRecord;
-import org.motechproject.vxml.domain.CallStatus;
-import org.motechproject.vxml.domain.Config;
-import org.motechproject.vxml.domain.ConfigHelper;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -50,7 +50,7 @@ public class StatusController {
         Config config = configDataService.findByName(configName);
         // Status callbacks referring to invalid configs will receive HTTP-500
         if (null == config){
-            String msg = String.format("No matching config in the database for: %s", configName);
+            String msg = String.format("No matching domain in the database for: %s", configName);
             logger.error(msg);
             motechStatusMessage.alert(msg);
             throw new IllegalArgumentException(msg);

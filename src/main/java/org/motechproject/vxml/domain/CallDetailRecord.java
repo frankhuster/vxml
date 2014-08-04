@@ -100,7 +100,7 @@ public class CallDetailRecord {
     public String toString() {
         return "CallDetailRecord{" +
                 "timestamp=" + timestamp +
-                ", config='" + config + '\'' +
+                ", domain='" + config + '\'' +
                 ", from='" + from + '\'' +
                 ", to='" + to + '\'' +
                 ", callStatus=" + callStatus +

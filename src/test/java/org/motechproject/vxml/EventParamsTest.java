@@ -1,4 +1,4 @@
-package org.motechproject.vxml.config;
+package org.motechproject.vxml;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -21,14 +21,14 @@ public class EventParamsTest {
         Map<String, String> extraData = new HashMap<>();
         extraData.put("foo", "bar");
         DateTime dtNow = DateTime.now();
-        CallDetailRecord callDetailRecord = new CallDetailRecord(dtNow, "config", "from", "to", CallStatus.ANSWERED,
+        CallDetailRecord callDetailRecord = new CallDetailRecord(dtNow, "domain", "from", "to", CallStatus.ANSWERED,
                 "providerStatus", "motechCallId", "providerCallId", extraData);
 
-        //Pass it to eventParamsFromCallDetailRecord
+        //Pass service to eventParamsFromCallDetailRecord
         Map<String, Object> eventParams = EventParams.eventParamsFromCallDetailRecord(callDetailRecord);
 
         //Verify all data was passed properly
-        assertEquals("config", eventParams.get(EventParams.CONFIG));
+        assertEquals("domain", eventParams.get(EventParams.CONFIG));
         assertEquals("from", eventParams.get(EventParams.FROM));
         assertEquals("to", eventParams.get(EventParams.TO));
         assertEquals(CallStatus.ANSWERED, eventParams.get(EventParams.CALL_STATUS));
