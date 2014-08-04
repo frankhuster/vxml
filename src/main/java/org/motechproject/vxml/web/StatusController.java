@@ -41,6 +41,14 @@ public class StatusController {
         this.motechStatusMessage = motechStatusMessage;
     }
 
+    /**
+     * Listens to HTTP calls to http://{server}:{port}/module/vxml/status/{config}?param1=val1&param2=val2&... from IVR
+     * providers. Creates a corresponding CDR entity in the database. Sends a MOTECH message with the CDR data in the
+     * payload and the call status as the subject.
+     *
+     * @param configName
+     * @param params
+     */
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     @RequestMapping(value = "/{configName}")
