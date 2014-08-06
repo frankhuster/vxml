@@ -1,17 +1,8 @@
 package org.motechproject.vxml.it;
 
-import org.apache.http.HttpStatus;
-import org.apache.http.ProtocolVersion;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.message.BasicHttpResponse;
-import org.apache.http.message.BasicStatusLine;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.vxml.domain.CallDetailRecord;
@@ -33,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
 
 
 /**
@@ -44,6 +34,9 @@ import static org.mockito.Mockito.when;
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class OutboundCallServiceIT extends BasePaxIT {
 
+
+    private SimpleHttpServer testHttpServer;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Inject
@@ -52,35 +45,30 @@ public class OutboundCallServiceIT extends BasePaxIT {
     private CallDetailRecordDataService callDetailRecordDataService;
     @Inject
     private ConfigDataService configDataService;
-    @Mock
-    private HttpClient httpClient;
 
     @Before
-    public void setup() {
-        logger.info("setup");
+    public void setup() throws Exception {
+        logger.info("setup()");
         try { callDetailRecordDataService.deleteAll(); } catch (JDOException e) { }
-
-        MockitoAnnotations.initMocks(this);
     }
 
     @Test
     public void verifyServiceFunctional() throws Exception {
-        logger.info("verifyServiceFunctional");
+        logger.info("verifyServiceFunctional()");
+
+        SimpleHttpServer simpleHttpServer = new SimpleHttpServer("foobar", 8888);
 
         //Create a config
         Map<String, CallStatus> statusMap = new HashMap<>();
         Map<String, String> callDetailMap = new HashMap<>();
-        Config config = new Config("config123", statusMap, callDetailMap, "+12065551212", "http://localhost/fubar");
+        Config config = new Config("conf123", statusMap, callDetailMap, "+12065551212", "http://localhost:8888/foobar");
         configDataService.create(config);
 
-        when(httpClient.execute(Matchers.<HttpUriRequest>any())).thenReturn(new BasicHttpResponse(new BasicStatusLine(
-                new ProtocolVersion("HTTP", 1, 1), HttpStatus.SC_OK, "OK")));
-
         Map<String, String> params = new HashMap<>();
-        outboundCallService.initiateCall("config123", params);
+        outboundCallService.initiateCall("conf123", params);
 
         List<CallDetailRecord> callDetailRecords = callDetailRecordDataService.retrieveAll();
         assertEquals(1, callDetailRecords.size());
-        assertEquals("config123", callDetailRecords.get(0).config);
+        assertEquals("conf123", callDetailRecords.get(0).config);
     }
 }
