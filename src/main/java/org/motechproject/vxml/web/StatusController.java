@@ -53,16 +53,9 @@ public class StatusController {
     @ResponseBody
     @RequestMapping(value = "/{configName}")
     public void handle(@PathVariable String configName, @RequestParam Map<String, String> params) {
-        logger.debug("configName = {}, params = {}", configName, params);
+        logger.debug("handle(configName = {}, params = {})", configName, params);
 
-        Config config = configDataService.findByName(configName);
-        // Status callbacks referring to invalid configs will receive HTTP-500
-        if (null == config){
-            String msg = String.format("No matching domain in the database for: %s", configName);
-            logger.error(msg);
-            motechStatusMessage.alert(msg);
-            throw new IllegalArgumentException(msg);
-        }
+        Config config = ConfigHelper.getConfig(configDataService, motechStatusMessage, configName);
 
         // Construct a CDR from the URL query parameters passed in the callback
         CallDetailRecord callDetailRecord = new CallDetailRecord();

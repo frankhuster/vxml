@@ -24,7 +24,7 @@ public class ConfigHelperTest {
         Map<String, String> callDetailMap = new HashMap<>();
         callDetailMap.put("recipient", "to");
 
-        config = new Config("Config", statusMap, callDetailMap);
+        config = new Config("Config", statusMap, callDetailMap, "+12065551212", "http://foo.com/bar");
     }
 
     @Test

@@ -2,14 +2,13 @@ package org.motechproject.vxml;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
-import org.motechproject.vxml.EventParams;
 import org.motechproject.vxml.domain.CallDetailRecord;
 import org.motechproject.vxml.domain.CallStatus;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * todo

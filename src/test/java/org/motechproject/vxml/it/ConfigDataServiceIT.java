@@ -50,7 +50,7 @@ public class ConfigDataServiceIT extends BasePaxIT {
         Map<String, String> callDetailMap = new HashMap<>();
         callDetailMap.put("recipient", "to");
 
-        Config myConfig = new Config("MyConfig", statusMap, callDetailMap);
+        Config myConfig = new Config("MyConfig", statusMap, callDetailMap, "+12065551212", "http://foo.com/bar");
         configDataService.create(myConfig);
 
         Config config = configDataService.findByName("MyConfig");

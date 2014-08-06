@@ -1,5 +1,7 @@
 package org.motechproject.vxml.domain;
 
+import org.motechproject.vxml.repository.ConfigDataService;
+import org.motechproject.vxml.service.MotechStatusMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,5 +82,26 @@ public class ConfigHelper {
         } catch (NoSuchFieldException e) {
             callDetailRecord.providerExtraData.put(fieldName, value);
         }
+    }
+
+    /**
+     * Returns a Config object from the database given a configName. Logs an error and sends a MotechStatusMessage if
+     * the configName doesn't exist in the database then throws an IllegalStateException
+     *
+     * @param configDataService  handle to the MDS service for the Config table
+     * @param motechStatusMessage  handle to the MotechStatusMessage service
+     * @param configName  name of the config to read from the database
+     * @return
+     */
+    public static Config getConfig(ConfigDataService configDataService, MotechStatusMessage motechStatusMessage,
+                                   String configName) {
+        Config config = configDataService.findByName(configName);
+        if (null == config) {
+            String msg = String.format("No matching config in the database for: %s", configName);
+            logger.error(msg);
+            motechStatusMessage.alert(msg);
+            throw new IllegalArgumentException(msg);
+        }
+        return config;
     }
 }

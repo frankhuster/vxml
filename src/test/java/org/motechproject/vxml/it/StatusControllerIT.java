@@ -78,10 +78,10 @@ public class StatusControllerIT extends BasePaxIT {
     public void verifyControllerFunctional() throws Exception {
         logger.info("verifyControllerFunctional");
 
-        //Create a domain
+        //Create a config
         Map<String, CallStatus> statusMap = new HashMap<>();
         Map<String, String> callDetailMap = new HashMap<>();
-        Config config = new Config("foo", statusMap, callDetailMap);
+        Config config = new Config("foo", statusMap, callDetailMap, "+12065551212", "http://foo.com/bar");
         configDataService.create(config);
 
         //Create & send a CDR status callback
