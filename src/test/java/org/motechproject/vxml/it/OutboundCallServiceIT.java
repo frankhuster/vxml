@@ -1,5 +1,6 @@
 package org.motechproject.vxml.it;
 
+import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -33,9 +35,6 @@ import static org.junit.Assert.assertEquals;
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class OutboundCallServiceIT extends BasePaxIT {
-
-
-    private SimpleHttpServer testHttpServer;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -56,12 +55,12 @@ public class OutboundCallServiceIT extends BasePaxIT {
     public void verifyServiceFunctional() throws Exception {
         logger.info("verifyServiceFunctional()");
 
-        SimpleHttpServer simpleHttpServer = new SimpleHttpServer("foobar", 8888);
+        SimpleHttpServer server = new SimpleHttpServer("foo", 8888, HttpStatus.SC_OK, "OK");
 
         //Create a config
         Map<String, CallStatus> statusMap = new HashMap<>();
         Map<String, String> callDetailMap = new HashMap<>();
-        Config config = new Config("conf123", statusMap, callDetailMap, "+12065551212", "http://localhost:8888/foobar");
+        Config config = new Config("conf123", statusMap, callDetailMap, "+12065551212", server.getUri());
         configDataService.create(config);
 
         Map<String, String> params = new HashMap<>();
@@ -70,5 +69,32 @@ public class OutboundCallServiceIT extends BasePaxIT {
         List<CallDetailRecord> callDetailRecords = callDetailRecordDataService.retrieveAll();
         assertEquals(1, callDetailRecords.size());
         assertEquals("conf123", callDetailRecords.get(0).config);
+    }
+
+    @Test
+    public void shouldHandleInvalidServerResponse() throws Exception {
+        logger.info("shouldHandleInvalidServerResponse()");
+
+        SimpleHttpServer server = new SimpleHttpServer("bar", 8889, HttpStatus.SC_BAD_REQUEST, "Eeek!");
+
+        //Create a config
+        Map<String, CallStatus> statusMap = new HashMap<>();
+        Map<String, String> callDetailMap = new HashMap<>();
+        Config config = new Config("conf456", statusMap, callDetailMap, "+12065551212", server.getUri());
+        configDataService.create(config);
+
+        boolean exceptionThrown = false;
+        Map<String, String> params = new HashMap<>();
+        try {
+            outboundCallService.initiateCall("conf456", params);
+        }
+        catch (RuntimeException e) {
+            exceptionThrown = true;
+        }
+        // We're expecting an exception to be thrown
+        assertTrue(exceptionThrown);
+
+        List<CallDetailRecord> callDetailRecords = callDetailRecordDataService.retrieveAll();
+        assertEquals(0, callDetailRecords.size());
     }
 }
