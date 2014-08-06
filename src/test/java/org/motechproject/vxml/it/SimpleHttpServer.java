@@ -25,28 +25,49 @@ public class SimpleHttpServer {
     private int responseCode;
     private String responseBody;
 
-    public SimpleHttpServer(String resource, int port, int responseCode, String responseBody) throws IOException {
+    public SimpleHttpServer(String resource, int responseCode, String responseBody) {
         this.responseCode = responseCode;
         this.responseBody = responseBody;
         this.resource = resource;
-        this.port = port;
-        this.server = HttpServer.create(new InetSocketAddress(port), 0);
+        this.port = 8080;
+        int maxTries = 1000;
 
-        start();
+        // Loop 1000 times to try to find an open port starting at 8080
+        do {
+            try {
+                server = HttpServer.create(new InetSocketAddress(port), 0);
+            }
+            catch (Exception e) {
+                port++;
+                maxTries--;
+            }
+        } while (null == server && maxTries > 0);
+        
+        if (maxTries > 0) {
+            start();
+        }
+        else {
+            throw new RuntimeException("Unable to find an open port");
+        }
     }
 
-    private void start() throws IOException {
-        server.createContext(String.format("/%s", resource), new HttpHandler() {
-            @Override
-            public void handle(HttpExchange httpExchange) throws IOException {
-                httpExchange.sendResponseHeaders(responseCode, responseBody.length());
-                OutputStream os = httpExchange.getResponseBody();
-                os.write(responseBody.getBytes());
-                os.close();
-            }
-        });
-        server.setExecutor(null);
-        server.start();
+    private void start() {
+        try {
+            server.createContext(String.format("/%s", resource), new HttpHandler() {
+                @Override
+                public void handle(HttpExchange httpExchange) throws IOException {
+                    httpExchange.sendResponseHeaders(responseCode, responseBody.length());
+                    OutputStream os = httpExchange.getResponseBody();
+                    os.write(responseBody.getBytes());
+                    os.close();
+                }
+            });
+            server.setExecutor(null);
+            server.start();
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Unable to start server: " + e);
+        }
     }
 
     public String getUri() {

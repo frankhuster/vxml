@@ -55,7 +55,7 @@ public class OutboundCallServiceIT extends BasePaxIT {
     public void verifyServiceFunctional() throws Exception {
         logger.info("verifyServiceFunctional()");
 
-        SimpleHttpServer server = new SimpleHttpServer("foo", 8888, HttpStatus.SC_OK, "OK");
+        SimpleHttpServer server = new SimpleHttpServer("foo", HttpStatus.SC_OK, "OK");
 
         //Create a config
         Map<String, CallStatus> statusMap = new HashMap<>();
@@ -75,7 +75,7 @@ public class OutboundCallServiceIT extends BasePaxIT {
     public void shouldHandleInvalidServerResponse() throws Exception {
         logger.info("shouldHandleInvalidServerResponse()");
 
-        SimpleHttpServer server = new SimpleHttpServer("bar", 8889, HttpStatus.SC_BAD_REQUEST, "Eeek!");
+        SimpleHttpServer server = new SimpleHttpServer("bar", HttpStatus.SC_BAD_REQUEST, "Eeek!");
 
         //Create a config
         Map<String, CallStatus> statusMap = new HashMap<>();
