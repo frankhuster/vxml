@@ -1,0 +1,75 @@
+{
+    "displayName": "vxml.task.name",
+    "moduleName": "${project.artifactId}",
+    "moduleVersion": "${parsedVersion.osgiVersion}",
+    "triggerTaskEvents" : [
+        {
+            "displayName" : "vxml.task.status_initiated",
+            "subject" : "vxml_status_initiated",
+            "eventParameters" : [
+                {
+                    "eventKey" : "timestamp",
+                    "type" : "DATE",
+                    "displayName" : "vxml.task.timestamp"
+                },
+                {
+                    "eventKey" : "config",
+                    "displayName" : "vxml.task.config"
+                },
+                {
+                    "eventKey" : "from",
+                    "displayName" : "vxml.task.from"
+                },
+                {
+                    "eventKey" : "to",
+                    "displayName" : "vxml.task.to"
+                },
+                {
+                    "eventKey" : "callDirection",
+                    "displayName" : "vxml.task.call_direction"
+                },
+                {
+                    "eventKey" : "callStatus",
+                    "displayName" : "vxml.task.call_status"
+                },
+                {
+                    "eventKey" : "provider_status",
+                    "displayName" : "vxml.task.provider_status"
+                },
+                {
+                    "eventKey" : "motech_call_id",
+                    "displayName" : "vxml.task.motech_call_id"
+                },
+                {
+                    "eventKey" : "provider_call_id",
+                    "displayName" : "vxml.task.provider_call_id"
+                },
+                {
+                    "eventKey" : "provider_extra_data",
+                    "displayName" : "vxml.task.provider_extra_data"
+                }
+            ]
+        }
+    ],
+    "actionTaskEvents": [
+        {
+            "displayName" : "vxml.task.initiate_call",
+            "subject" : "vxml_initiate_call",
+            "actionParameters" : [
+                {
+                    "eventKey" : "timestamp",
+                    "type" : "DATE",
+                    "displayName" : "vxml.task.timestamp"
+                },
+                {
+                    "eventKey" : "config",
+                    "displayName" : "vxml.task.config"
+                },
+                {
+                    "eventKey" : "params",
+                    "displayName" : "vxml.task.params"
+                }
+            ]
+        }
+    ]
+}

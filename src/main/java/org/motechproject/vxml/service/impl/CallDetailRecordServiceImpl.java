@@ -3,6 +3,7 @@ package org.motechproject.vxml.service.impl;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.motechproject.vxml.domain.CallDetailRecord;
+import org.motechproject.vxml.domain.CallDirection;
 import org.motechproject.vxml.domain.CallStatus;
 import org.motechproject.vxml.repository.CallDetailRecordDataService;
 import org.motechproject.vxml.service.CallDetailRecordService;
@@ -23,20 +24,22 @@ public class CallDetailRecordServiceImpl implements CallDetailRecordService {
     private CallDetailRecordDataService callDetailRecordDataService;
 
     @Override
-    public void logFromProvider(String config, String from, String to, CallStatus callStatus, String providerStatus,
-                                String motechCallId, String providerCallId, Map<String, String> providerExtraData) {
+    public void logFromProvider(String config, String from, String to, CallDirection callDirection,
+                                CallStatus callStatus, String providerStatus, String motechCallId,
+                                String providerCallId, Map<String, String> providerExtraData) {
         List<CallDetailRecord> callDetailRecords = callDetailRecords = callDetailRecordDataService.findByProviderCallId(
                 providerCallId);
         if (callDetailRecords.size() > 0 && StringUtils.isNotBlank(callDetailRecords.get(0).motechCallId)) {
             motechCallId = callDetailRecords.get(0).motechCallId;
         }
-        callDetailRecordDataService.create(new CallDetailRecord(DateTime.now(), config, from, to, callStatus,
-                providerStatus, motechCallId, providerCallId, providerExtraData));
+        callDetailRecordDataService.create(new CallDetailRecord(DateTime.now(), config, from, to, callDirection,
+                callStatus, providerStatus, motechCallId, providerCallId, providerExtraData));
     }
 
     @Override
-    public void logFromMotech(String config, String from, String to, CallStatus callStatus, String motechId) {
-        callDetailRecordDataService.create(new CallDetailRecord(DateTime.now(), config, from, to, callStatus,
-                callStatus.toString(), motechId, null, null));
+    public void logFromMotech(String config, String from, String to, CallDirection callDirection, CallStatus callStatus,
+                              String motechId) {
+        callDetailRecordDataService.create(new CallDetailRecord(DateTime.now(), config, from, to, callDirection,
+                callStatus, callStatus.toString(), motechId, null, null));
     }
 }

@@ -29,6 +29,10 @@ public final class EventParams {
      */
     public static final String TO = "to";
     /**
+     * Call direction  -  INBOUND (MO) or OUTBOUND (MT)
+     */
+    public static final String CALL_DIRECTION = "callDirection";
+    /**
      * Call status
      */
     public static final String CALL_STATUS = "callStatus";
@@ -60,6 +64,7 @@ public final class EventParams {
         eventParams.put(EventParams.CONFIG, callDetailRecord.config);
         eventParams.put(EventParams.FROM, callDetailRecord.from);
         eventParams.put(EventParams.TO, callDetailRecord.to);
+        eventParams.put(EventParams.CALL_DIRECTION, callDetailRecord.callDirection);
         eventParams.put(EventParams.CALL_STATUS, callDetailRecord.callStatus);
         eventParams.put(EventParams.PROVIDER_STATUS, callDetailRecord.providerStatus);
         eventParams.put(EventParams.MOTECH_CALL_ID, callDetailRecord.motechCallId);

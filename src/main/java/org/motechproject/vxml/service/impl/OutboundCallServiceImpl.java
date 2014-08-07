@@ -7,6 +7,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.params.BasicHttpParams;
 import org.motechproject.vxml.CallInitiationException;
+import org.motechproject.vxml.domain.CallDirection;
 import org.motechproject.vxml.domain.CallStatus;
 import org.motechproject.vxml.domain.Config;
 import org.motechproject.vxml.domain.ConfigHelper;
@@ -77,7 +78,8 @@ public class OutboundCallServiceImpl implements OutboundCallService{
 
         String from = params.containsKey("from") ? params.get("from") : "";
         String to = params.containsKey("to") ? params.get("to") : "";
-        callDetailRecordService.logFromMotech(config.name, from, to, CallStatus.INITIATED, motechCallId);
+        callDetailRecordService.logFromMotech(config.name, from, to, CallDirection.OUTBOUND, CallStatus.INITIATED,
+                motechCallId);
     }
 
     private HttpGet generateGetRequest(Config config, Map<String, String> params) {

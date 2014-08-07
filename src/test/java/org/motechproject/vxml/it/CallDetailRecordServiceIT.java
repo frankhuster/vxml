@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.vxml.domain.CallDetailRecord;
+import org.motechproject.vxml.domain.CallDirection;
 import org.motechproject.vxml.domain.CallStatus;
 import org.motechproject.vxml.repository.CallDetailRecordDataService;
 import org.ops4j.pax.exam.ExamFactory;
@@ -61,7 +62,8 @@ public class CallDetailRecordServiceIT extends BasePaxIT {
         // logFromMotech
         //
         String motechCallId = UUID.randomUUID().toString();
-        callDetailRecordService.logFromMotech("domain-a", "from", "to", CallStatus.IN_PROGRESS, motechCallId);
+        callDetailRecordService.logFromMotech("domain-a", "from", "to", CallDirection.OUTBOUND, CallStatus.IN_PROGRESS,
+                motechCallId);
         logger.info("created call record with motechCallId {}", motechCallId);
         List<CallDetailRecord> callDetailRecords = callDetailRecordDataService.findByMotechCallId(motechCallId);
         assertEquals(1, callDetailRecords.size());
@@ -72,16 +74,17 @@ public class CallDetailRecordServiceIT extends BasePaxIT {
         // logFromProvider
         //
         motechCallId = UUID.randomUUID().toString();
-        callDetailRecordService.logFromMotech("domain-b", "from", "to", CallStatus.IN_PROGRESS, motechCallId);
+        callDetailRecordService.logFromMotech("domain-b", "from", "to", CallDirection.INBOUND, CallStatus.IN_PROGRESS,
+                motechCallId);
         logger.info("created call record with motechCallId {}", motechCallId);
 
         String providerCallId = "SOMEPROVIDER-" + UUID.randomUUID().toString();
-        callDetailRecordService.logFromProvider("domain-b", "from", "to", CallStatus.BUSY, "Busy", motechCallId,
-                providerCallId, quickieMap("foo", "bar", "baz", "bat"));
+        callDetailRecordService.logFromProvider("domain-b", "from", "to", CallDirection.INBOUND, CallStatus.BUSY,
+                "Busy", motechCallId, providerCallId, quickieMap("foo", "bar", "baz", "bat"));
         logger.info("created call record with motechCallId {} & providerCallId {}", motechCallId, providerCallId);
 
-        callDetailRecordService.logFromProvider("domain-b", "from", "to", CallStatus.ANSWERED, "Answered", null,
-                providerCallId, quickieMap("goo", "zar", "zaz", "zat"));
+        callDetailRecordService.logFromProvider("domain-b", "from", "to", CallDirection.INBOUND, CallStatus.ANSWERED,
+                "Answered", null, providerCallId, quickieMap("goo", "zar", "zaz", "zat"));
         logger.info("created call record with providerCallId {}", providerCallId);
 
         callDetailRecords = callDetailRecordDataService.findByProviderCallId(providerCallId);

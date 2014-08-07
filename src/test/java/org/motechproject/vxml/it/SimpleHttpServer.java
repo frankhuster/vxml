@@ -42,7 +42,7 @@ public class SimpleHttpServer {
                 maxTries--;
             }
         } while (null == server && maxTries > 0);
-        
+
         if (maxTries > 0) {
             start();
         }

@@ -23,6 +23,9 @@ public class CallDetailRecord {
     public String to;
 
     @Field
+    public CallDirection callDirection;
+
+    @Field
     public CallStatus callStatus;
 
     @Field
@@ -42,14 +45,15 @@ public class CallDetailRecord {
         callStatus = CallStatus.UNKNOWN;
     }
 
-    public CallDetailRecord(DateTime timestamp, String config, String from, String to, CallStatus callStatus,
-                            String providerStatus, String motechCallId, String providerCallId,
+    public CallDetailRecord(DateTime timestamp, String config, String from, String to, CallDirection callDirection,
+                            CallStatus callStatus, String providerStatus, String motechCallId, String providerCallId,
                             Map<String, String> providerExtraData) {
         this();
         this.timestamp = timestamp;
         this.config = config;
         this.from = from;
         this.to = to;
+        this.callDirection = callDirection;
         this.callStatus = callStatus;
         this.providerStatus = providerStatus;
         this.motechCallId = motechCallId;
@@ -66,6 +70,7 @@ public class CallDetailRecord {
 
         CallDetailRecord that = (CallDetailRecord) o;
 
+        if (callDirection != that.callDirection) return false;
         if (callStatus != that.callStatus) return false;
         if (!config.equals(that.config)) return false;
         if (from != null ? !from.equals(that.from) : that.from != null) return false;
@@ -88,6 +93,7 @@ public class CallDetailRecord {
         result = 31 * result + config.hashCode();
         result = 31 * result + (from != null ? from.hashCode() : 0);
         result = 31 * result + (to != null ? to.hashCode() : 0);
+        result = 31 * result + callDirection.hashCode();
         result = 31 * result + callStatus.hashCode();
         result = 31 * result + (providerStatus != null ? providerStatus.hashCode() : 0);
         result = 31 * result + (motechCallId != null ? motechCallId.hashCode() : 0);
@@ -103,6 +109,7 @@ public class CallDetailRecord {
                 ", domain='" + config + '\'' +
                 ", from='" + from + '\'' +
                 ", to='" + to + '\'' +
+                ", callDirection=" + callDirection +
                 ", callStatus=" + callStatus +
                 ", providerStatus='" + providerStatus + '\'' +
                 ", motechCallId='" + motechCallId + '\'' +

@@ -24,7 +24,7 @@ public class Config {
     public Map<String, CallStatus> statusMap = new HashMap<>();
 
     /**
-     * A way to map a IVR provider call detail string (eg: the 'from' phone number) to a MOTECH CallDetail field
+     * A way to map an IVR provider call detail string (eg: the 'from' phone number) to a MOTECH CallDetail field
      * Unmatched IVR provider call detail parameters are added to CallDetailRecord.providerExtraData
      */
     @Field
