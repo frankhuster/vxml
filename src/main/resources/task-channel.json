@@ -57,17 +57,12 @@
             "subject" : "vxml_initiate_call",
             "actionParameters" : [
                 {
-                    "eventKey" : "timestamp",
-                    "type" : "DATE",
-                    "displayName" : "vxml.task.timestamp"
-                },
-                {
-                    "eventKey" : "config",
+                    "key" : "config",
                     "displayName" : "vxml.task.config"
                 },
                 {
-                    "eventKey" : "params",
-                    "displayName" : "vxml.task.params"
+                    "key" : "to",
+                    "displayName" : "vxml.task.to"
                 }
             ]
         }
