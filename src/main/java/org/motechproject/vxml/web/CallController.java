@@ -23,8 +23,8 @@ import java.util.Map;
  * todo
  */
 @Controller
-@RequestMapping(value = "/status")
-public class StatusController {
+@RequestMapping(value = "/call")
+public class CallController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private CallDetailRecordDataService callDetailRecordDataService;
@@ -33,7 +33,7 @@ public class StatusController {
     private EventRelay eventRelay;
 
     @Autowired
-    public StatusController(CallDetailRecordDataService callDetailRecordDataService, EventRelay eventRelay,
+    public CallController(CallDetailRecordDataService callDetailRecordDataService, EventRelay eventRelay,
                             ConfigDataService configDataService, MotechStatusMessage motechStatusMessage) {
         this.callDetailRecordDataService = callDetailRecordDataService;
         this.eventRelay = eventRelay;
@@ -42,9 +42,7 @@ public class StatusController {
     }
 
     /**
-     * Listens to HTTP calls to http://{server}:{port}/module/vxml/status/{config}?param1=val1&param2=val2&... from IVR
-     * providers. Creates a corresponding CDR entity in the database. Sends a MOTECH message with the CDR data in the
-     * payload and the call status as the subject.
+     * todo
      *
      * @param configName
      * @param params
@@ -54,9 +52,17 @@ public class StatusController {
     @RequestMapping(value = "/{configName}")
     public void handle(@PathVariable String configName, @RequestParam Map<String, String> params,
                        @RequestHeader Map<String, String> headers) {
+
+        //todo *********************************************************************************************************
+        //todo
+        //todo: remember to change the supportedThemes entry to USERNAME_PASSWORD in securityRules.json after debugging
+        //todo
+        //todo *********************************************************************************************************
+
         logger.debug(String.format("handle(configName = %s, params = %s, headers = %s)", configName, params, headers));
 
         Config config = ConfigHelper.getConfig(configDataService, motechStatusMessage, configName);
+
 
         // Construct a CDR from the URL query parameters passed in the callback
         CallDetailRecord callDetailRecord = new CallDetailRecord();
