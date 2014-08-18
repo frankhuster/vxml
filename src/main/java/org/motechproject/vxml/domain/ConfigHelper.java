@@ -69,6 +69,15 @@ public class ConfigHelper {
                         callDetailRecord.providerExtraData.put(fieldName, value);
                     }
                 }
+                else if (fieldName.equals("callDirection")) {
+                    object = mapStatus(config, value).toString().toUpperCase();
+                    try {
+                        CallDirection callDirection = CallDirection.valueOf(object.toString());
+                        object = callDirection;
+                    } catch (IllegalArgumentException e) {
+                        object = CallDirection.UNKNOWN;
+                    }
+                }
                 else {
                     object = value;
                 }

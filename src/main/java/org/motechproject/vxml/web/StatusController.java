@@ -1,5 +1,6 @@
 package org.motechproject.vxml.web;
 
+import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.vxml.EventParams;
@@ -63,6 +64,11 @@ public class StatusController {
         callDetailRecord.config = config.name;
         for (Map.Entry<String, String> entry : params.entrySet()) {
             ConfigHelper.setCallDetail(config, entry.getKey(), entry.getValue(), callDetailRecord);
+        }
+
+        // Use current time if the provider didn't provide a timestamp
+        if (null == callDetailRecord.timestamp) {
+            callDetailRecord.timestamp = DateTime.now();
         }
 
         // Generate a MOTECH event

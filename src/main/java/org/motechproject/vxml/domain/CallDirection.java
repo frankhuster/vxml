@@ -7,5 +7,6 @@ package org.motechproject.vxml.domain;
  */
 public enum CallDirection {
     INBOUND,
-    OUTBOUND
+    OUTBOUND,
+    UNKNOWN
 }
