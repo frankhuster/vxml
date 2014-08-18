@@ -32,6 +32,7 @@ public class StatusController {
     private ConfigDataService configDataService;
     private MotechStatusMessage motechStatusMessage;
     private EventRelay eventRelay;
+    private static final int MAX_ENTITY_STRING_LENGTH = 255;
 
     @Autowired
     public StatusController(CallDetailRecordDataService callDetailRecordDataService, EventRelay eventRelay,
@@ -63,6 +64,11 @@ public class StatusController {
         CallDetailRecord callDetailRecord = new CallDetailRecord();
         callDetailRecord.config = config.name;
         for (Map.Entry<String, String> entry : params.entrySet()) {
+            String value = entry.getValue();
+            if (value.length() > MAX_ENTITY_STRING_LENGTH) {
+                logger.warn("The value for {} exceeds {} characters, truncating!", entry.getKey(), value.length());
+                value = value.substring(0, MAX_ENTITY_STRING_LENGTH);
+            }
             ConfigHelper.setCallDetail(config, entry.getKey(), entry.getValue(), callDetailRecord);
         }
 
