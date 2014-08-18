@@ -66,10 +66,11 @@ public class StatusController {
         for (Map.Entry<String, String> entry : params.entrySet()) {
             String value = entry.getValue();
             if (value.length() > MAX_ENTITY_STRING_LENGTH) {
-                logger.warn("The value for {} exceeds {} characters, truncating!", entry.getKey(), value.length());
+                logger.warn("The value for {} exceeds {} characters, truncating!", entry.getKey(),
+                        MAX_ENTITY_STRING_LENGTH);
                 value = value.substring(0, MAX_ENTITY_STRING_LENGTH);
             }
-            ConfigHelper.setCallDetail(config, entry.getKey(), entry.getValue(), callDetailRecord);
+            ConfigHelper.setCallDetail(config, entry.getKey(), value, callDetailRecord);
         }
 
         // Use current time if the provider didn't provide a timestamp
