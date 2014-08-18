@@ -70,9 +70,8 @@ public class ConfigHelper {
                     }
                 }
                 else if (fieldName.equals("callDirection")) {
-                    object = mapStatus(config, value).toString().toUpperCase();
                     try {
-                        CallDirection callDirection = CallDirection.valueOf(object.toString().toUpperCase());
+                        CallDirection callDirection = CallDirection.valueOf(value);
                         object = callDirection;
                     } catch (IllegalArgumentException e) {
                         object = CallDirection.UNKNOWN;
