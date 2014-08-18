@@ -66,8 +66,9 @@ public class StatusController {
         for (Map.Entry<String, String> entry : params.entrySet()) {
             String value = entry.getValue();
             if (value.length() > MAX_ENTITY_STRING_LENGTH) {
-                logger.warn("The value for {} exceeds {} characters, truncating!", entry.getKey(),
+                logger.warn("The value for {} exceeds {} characters and will be truncated.", entry.getKey(),
                         MAX_ENTITY_STRING_LENGTH);
+                logger.warn("The complete value for {} is {}", entry.getKey(), entry.getValue());
                 value = value.substring(0, MAX_ENTITY_STRING_LENGTH);
             }
             ConfigHelper.setCallDetail(config, entry.getKey(), value, callDetailRecord);
