@@ -12,8 +12,8 @@ public interface CallDetailRecordService {
 
     public String currentTime();
     public void logFromProvider(String config, String from, String to, CallDirection callDirection,
-                                CallStatus callStatus, String providerStatus, String motechCallId,
-                                String providerCallId, Map<String, String> providerExtraData);
+                                CallStatus callStatus, String motechCallId, String providerCallId,
+                                Map<String, String> providerExtraData);
     void logFromMotech(String config, String from, String to, CallDirection callDirection, CallStatus callStatus,
                        String motechId);
 }

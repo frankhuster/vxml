@@ -20,8 +20,7 @@ public class EventParamsTest {
         Map<String, String> extraData = new HashMap<>();
         extraData.put("foo", "bar");
         CallDetailRecord callDetailRecord = new CallDetailRecord("sometime", "domain", "from", "to",
-                CallDirection.INBOUND, CallStatus.ANSWERED, "providerStatus", "motechCallId", "providerCallId",
-                extraData);
+                CallDirection.INBOUND, CallStatus.ANSWERED, "motechCallId", "providerCallId", extraData);
 
         //Pass service to eventParamsFromCallDetailRecord
         Map<String, Object> eventParams = EventParams.eventParamsFromCallDetailRecord(callDetailRecord);
@@ -33,7 +32,6 @@ public class EventParamsTest {
         assertEquals("to", eventParams.get(EventParams.TO));
         assertEquals(CallDirection.INBOUND, eventParams.get(EventParams.CALL_DIRECTION));
         assertEquals(CallStatus.ANSWERED, eventParams.get(EventParams.CALL_STATUS));
-        assertEquals("providerStatus", eventParams.get(EventParams.PROVIDER_STATUS));
         assertEquals("motechCallId", eventParams.get(EventParams.MOTECH_CALL_ID));
         assertEquals("providerCallId", eventParams.get(EventParams.PROVIDER_CALL_ID));
         assertEquals(extraData, eventParams.get(EventParams.PROVIDER_EXTRA_DATA));

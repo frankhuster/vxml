@@ -37,10 +37,6 @@ public final class EventParams {
      */
     public static final String CALL_STATUS = "callStatus";
     /**
-     * Provider's native call status
-     */
-    public static final String PROVIDER_STATUS = "providerStatus";
-    /**
      * MOTECH call id - a MOTECH-generated GUID
      */
     public static final String MOTECH_CALL_ID = "motechCallId";
@@ -67,7 +63,6 @@ public final class EventParams {
         eventParams.put(EventParams.TO, callDetailRecord.to);
         eventParams.put(EventParams.CALL_DIRECTION, callDetailRecord.callDirection);
         eventParams.put(EventParams.CALL_STATUS, callDetailRecord.callStatus);
-        eventParams.put(EventParams.PROVIDER_STATUS, callDetailRecord.providerStatus);
         eventParams.put(EventParams.MOTECH_CALL_ID, callDetailRecord.motechCallId);
         eventParams.put(EventParams.PROVIDER_CALL_ID, callDetailRecord.providerCallId);
         eventParams.put(EventParams.PROVIDER_EXTRA_DATA, callDetailRecord.providerExtraData);

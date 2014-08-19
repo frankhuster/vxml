@@ -28,9 +28,6 @@ public class CallDetailRecord {
     public CallStatus callStatus;
 
     @Field
-    public String providerStatus;
-
-    @Field
     public String motechCallId;
 
     @Field
@@ -45,7 +42,7 @@ public class CallDetailRecord {
     }
 
     public CallDetailRecord(String timestamp, String config, String from, String to, CallDirection callDirection,
-                            CallStatus callStatus, String providerStatus, String motechCallId, String providerCallId,
+                            CallStatus callStatus, String motechCallId, String providerCallId,
                             Map<String, String> providerExtraData) {
         this();
         this.timestamp = timestamp;
@@ -54,7 +51,6 @@ public class CallDetailRecord {
         this.to = to;
         this.callDirection = callDirection;
         this.callStatus = callStatus;
-        this.providerStatus = providerStatus;
         this.motechCallId = motechCallId;
         this.providerCallId = providerCallId;
         if (providerExtraData != null) {
@@ -78,8 +74,6 @@ public class CallDetailRecord {
             return false;
         if (providerExtraData != null ? !providerExtraData.equals(that.providerExtraData) :
                 that.providerExtraData != null) return false;
-        if (providerStatus != null ? !providerStatus.equals(that.providerStatus) : that.providerStatus != null)
-            return false;
         if (!timestamp.equals(that.timestamp)) return false;
         if (to != null ? !to.equals(that.to) : that.to != null) return false;
 
@@ -94,7 +88,6 @@ public class CallDetailRecord {
         result = 31 * result + (to != null ? to.hashCode() : 0);
         result = 31 * result + callDirection.hashCode();
         result = 31 * result + callStatus.hashCode();
-        result = 31 * result + (providerStatus != null ? providerStatus.hashCode() : 0);
         result = 31 * result + (motechCallId != null ? motechCallId.hashCode() : 0);
         result = 31 * result + (providerCallId != null ? providerCallId.hashCode() : 0);
         result = 31 * result + (providerExtraData != null ? providerExtraData.hashCode() : 0);
@@ -110,7 +103,6 @@ public class CallDetailRecord {
                 ", to='" + to + '\'' +
                 ", callDirection=" + callDirection +
                 ", callStatus=" + callStatus +
-                ", providerStatus='" + providerStatus + '\'' +
                 ", motechCallId='" + motechCallId + '\'' +
                 ", providerCallId='" + providerCallId + '\'' +
                 ", providerExtraData=" + providerExtraData +

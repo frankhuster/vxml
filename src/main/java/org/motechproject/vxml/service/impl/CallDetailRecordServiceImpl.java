@@ -33,21 +33,21 @@ public class CallDetailRecordServiceImpl implements CallDetailRecordService {
 
     @Override
     public void logFromProvider(String config, String from, String to, CallDirection callDirection,
-                                CallStatus callStatus, String providerStatus, String motechCallId,
-                                String providerCallId, Map<String, String> providerExtraData) {
+                                CallStatus callStatus, String motechCallId, String providerCallId,
+                                Map<String, String> providerExtraData) {
         List<CallDetailRecord> callDetailRecords = callDetailRecords = callDetailRecordDataService.findByProviderCallId(
                 providerCallId);
         if (callDetailRecords.size() > 0 && StringUtils.isNotBlank(callDetailRecords.get(0).motechCallId)) {
             motechCallId = callDetailRecords.get(0).motechCallId;
         }
         callDetailRecordDataService.create(new CallDetailRecord(currentTime(), config, from, to, callDirection,
-                callStatus, providerStatus, motechCallId, providerCallId, providerExtraData));
+                callStatus, motechCallId, providerCallId, providerExtraData));
     }
 
     @Override
     public void logFromMotech(String config, String from, String to, CallDirection callDirection, CallStatus callStatus,
                               String motechId) {
         callDetailRecordDataService.create(new CallDetailRecord(currentTime(), config, from, to, callDirection,
-                callStatus, callStatus.toString(), motechId, null, null));
+                callStatus, motechId, null, null));
     }
 }

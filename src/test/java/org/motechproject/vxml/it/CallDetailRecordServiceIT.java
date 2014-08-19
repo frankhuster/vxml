@@ -80,11 +80,11 @@ public class CallDetailRecordServiceIT extends BasePaxIT {
 
         String providerCallId = "SOMEPROVIDER-" + UUID.randomUUID().toString();
         callDetailRecordService.logFromProvider("domain-b", "from", "to", CallDirection.INBOUND, CallStatus.BUSY,
-                "Busy", motechCallId, providerCallId, quickieMap("foo", "bar", "baz", "bat"));
+                motechCallId, providerCallId, quickieMap("foo", "bar", "baz", "bat"));
         logger.info("created call record with motechCallId {} & providerCallId {}", motechCallId, providerCallId);
 
         callDetailRecordService.logFromProvider("domain-b", "from", "to", CallDirection.INBOUND, CallStatus.ANSWERED,
-                "Answered", null, providerCallId, quickieMap("goo", "zar", "zaz", "zat"));
+                null, providerCallId, quickieMap("goo", "zar", "zaz", "zat"));
         logger.info("created call record with providerCallId {}", providerCallId);
 
         callDetailRecords = callDetailRecordDataService.findByProviderCallId(providerCallId);

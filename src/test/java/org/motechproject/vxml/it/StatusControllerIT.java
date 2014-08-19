@@ -91,7 +91,6 @@ public class StatusControllerIT extends BasePaxIT {
                 .addParameter("from", "+12065551212")
                 .addParameter("to", "+12066661212")
                 .addParameter("callStatus", "ANSWERED")
-                .addParameter("providerStatus", "foo answered bar")
                 .addParameter("motechCallId", motechCallId)
                 .addParameter("providerCallId", "123456")
                 .addParameter("foo", "bar");
