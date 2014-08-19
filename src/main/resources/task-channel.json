@@ -4,8 +4,8 @@
     "moduleVersion": "${parsedVersion.osgiVersion}",
     "triggerTaskEvents" : [
         {
-            "displayName" : "vxml.task.status",
-            "subject" : "vxml_status",
+            "subject" : "vxml_call_status",
+            "displayName" : "vxml.task.callStatus",
             "eventParameters" : [
                 {
                     "eventKey" : "timestamp",
@@ -25,24 +25,44 @@
                     "displayName" : "vxml.task.to"
                 },
                 {
-                    "eventKey" : "callDirection",
-                    "displayName" : "vxml.task.call_direction"
+                    "eventKey" : "call_direction",
+                    "displayName" : "vxml.task.callDirection"
                 },
                 {
-                    "eventKey" : "callStatus",
-                    "displayName" : "vxml.task.call_status"
-                },
-                {
-                    "eventKey" : "provider_status",
-                    "displayName" : "vxml.task.provider_status"
+                    "eventKey" : "call_status",
+                    "displayName" : "vxml.task.callStatus"
                 },
                 {
                     "eventKey" : "motech_call_id",
-                    "displayName" : "vxml.task.motech_call_id"
+                    "displayName" : "vxml.task.motechCallId"
                 },
                 {
                     "eventKey" : "provider_call_id",
-                    "displayName" : "vxml.task.provider_call_id"
+                    "displayName" : "vxml.task.providerCallId"
+                },
+                {
+                    "eventKey" : "provider_extra_data",
+                    "type" : "MAP",
+                    "displayName" : "vxml.task.providerExtraData"
+                }
+            ]
+        },
+        {
+            "subject" : "vxml_call_initiated",
+            "displayName" : "vxml.task.callInitiated",
+            "eventParameters" : [
+                {
+                    "eventKey" : "timestamp",
+                    "type" : "DATE",
+                    "displayName" : "vxml.task.timestamp"
+                },
+                {
+                    "eventKey" : "config",
+                    "displayName" : "vxml.task.config"
+                },
+                {
+                    "eventKey" : "to",
+                    "displayName" : "vxml.task.to"
                 },
                 {
                     "eventKey" : "provider_extra_data",
@@ -54,16 +74,12 @@
     ],
     "actionTaskEvents": [
         {
-            "displayName" : "vxml.task.initiate_call",
             "subject" : "vxml_initiate_call",
+            "displayName" : "vxml.task.initiateCall",
             "actionParameters" : [
                 {
                     "key" : "config",
                     "displayName" : "vxml.task.config"
-                },
-                {
-                    "key" : "from",
-                    "displayName" : "vxml.task.from"
                 },
                 {
                     "key" : "to",
@@ -71,12 +87,12 @@
                 },
                 {
                     "key" : "motech_call_id",
-                    "displayName" : "vxml.task.motech_call_id"
+                    "displayName" : "vxml.task.motechCallId"
                 },
                 {
                     "key" : "provider_extra_data",
                     "type" : "MAP",
-                    "displayName" : "vxml.task.provider_extra_data"
+                    "displayName" : "vxml.task.providerExtraData"
                 }
             ]
         }
