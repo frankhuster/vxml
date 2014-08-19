@@ -52,7 +52,7 @@ public class ConfigDataServiceIT extends BasePaxIT {
 
         Map<String, String> outgoingCallUriParams = new HashMap<>();
 
-        Config myConfig = new Config("MyConfig", statusMap, callDetailMap, "", "+12065551212", "http://foo.com/bar",
+        Config myConfig = new Config("MyConfig", statusMap, callDetailMap, "", "http://foo.com/bar",
                 outgoingCallUriParams);
         configDataService.create(myConfig);
 

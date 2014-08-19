@@ -37,13 +37,6 @@ public class Config {
     public String ignoredFields;
 
     /**
-     * The phone number associated with this particular IVR provider config (eg: the receiving (to) number for incoming
-     * (MO) calls or the sending (from) number for outgoing (MT) calls.
-     */
-    @Field
-    public String phoneNumber;
-
-    /**
      * Template string used to issue an HTTP GET call to the IVR provider in order to initiate an outgoing (MT) call.
      * [xxx] placeholders are replaced with the values provided in the initiateCall() method.
      * todo: better javadoc when that's actually in place
@@ -63,13 +56,12 @@ public class Config {
     public Config() {  }
 
     public Config(String name, Map<String, CallStatus> statusMap, Map<String, String> callDetailMap,
-                  String ignoredFields, String phoneNumber, String outgoingCallUriTemplate,
+                  String ignoredFields, String outgoingCallUriTemplate,
                   Map<String, String> outgoingCallUriParams) {
         this.name = name;
         this.statusMap = statusMap;
         this.callDetailMap = callDetailMap;
         this.ignoredFields = ignoredFields;
-        this.phoneNumber = phoneNumber;
         this.outgoingCallUriTemplate = outgoingCallUriTemplate;
         this.outgoingCallUriParams = outgoingCallUriParams;
     }
@@ -90,7 +82,6 @@ public class Config {
         result = 31 * result + (statusMap != null ? statusMap.hashCode() : 0);
         result = 31 * result + (callDetailMap != null ? callDetailMap.hashCode() : 0);
         result = 31 * result + (ignoredFields != null ? ignoredFields.hashCode() : 0);
-        result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
         result = 31 * result + (outgoingCallUriTemplate != null ? outgoingCallUriTemplate.hashCode() : 0);
         result = 31 * result + (outgoingCallUriParams != null ? outgoingCallUriParams.hashCode() : 0);
         return result;
@@ -103,7 +94,6 @@ public class Config {
                 ", statusMap=" + statusMap +
                 ", callDetailMap=" + callDetailMap +
                 ", ignoredFields='" + ignoredFields + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
                 ", outgoingCallUriTemplate='" + outgoingCallUriTemplate + '\'' +
                 ", outgoingCallUriParams='" + outgoingCallUriParams + '\'' +
                 '}';
