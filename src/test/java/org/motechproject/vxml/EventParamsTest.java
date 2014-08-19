@@ -1,6 +1,5 @@
 package org.motechproject.vxml;
 
-import org.joda.time.DateTime;
 import org.junit.Test;
 import org.motechproject.vxml.domain.CallDetailRecord;
 import org.motechproject.vxml.domain.CallDirection;
@@ -20,14 +19,15 @@ public class EventParamsTest {
         //Construct a CDR
         Map<String, String> extraData = new HashMap<>();
         extraData.put("foo", "bar");
-        DateTime dtNow = DateTime.now();
-        CallDetailRecord callDetailRecord = new CallDetailRecord(dtNow, "domain", "from", "to", CallDirection.INBOUND,
-                CallStatus.ANSWERED, "providerStatus", "motechCallId", "providerCallId", extraData);
+        CallDetailRecord callDetailRecord = new CallDetailRecord("sometime", "domain", "from", "to",
+                CallDirection.INBOUND, CallStatus.ANSWERED, "providerStatus", "motechCallId", "providerCallId",
+                extraData);
 
         //Pass service to eventParamsFromCallDetailRecord
         Map<String, Object> eventParams = EventParams.eventParamsFromCallDetailRecord(callDetailRecord);
 
         //Verify all data was passed properly
+        assertEquals("sometime", eventParams.get(EventParams.TIMESTAMP));
         assertEquals("domain", eventParams.get(EventParams.CONFIG));
         assertEquals("from", eventParams.get(EventParams.FROM));
         assertEquals("to", eventParams.get(EventParams.TO));

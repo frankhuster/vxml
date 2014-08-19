@@ -10,6 +10,7 @@ import java.util.Map;
  */
 public interface CallDetailRecordService {
 
+    public String currentTime();
     public void logFromProvider(String config, String from, String to, CallDirection callDirection,
                                 CallStatus callStatus, String providerStatus, String motechCallId,
                                 String providerCallId, Map<String, String> providerExtraData);

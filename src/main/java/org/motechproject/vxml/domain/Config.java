@@ -31,7 +31,7 @@ public class Config {
     public Map<String, String> callDetailMap = new HashMap<>();
 
     /**
-     * A CSV list of fields that the IVR provider returns and should be not be included (ie: ignored) in the CDR data
+     * A CSV list of fields that the IVR provider returns and shouldn't be included (ie: ignored) in the CDR data
      */
     @Field
     public String ignoredFields;

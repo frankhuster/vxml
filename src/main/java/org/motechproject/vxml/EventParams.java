@@ -61,6 +61,7 @@ public final class EventParams {
      */
     public static Map<String, Object> eventParamsFromCallDetailRecord(CallDetailRecord callDetailRecord) {
         Map<String, Object> eventParams = new HashMap<>();
+        eventParams.put(EventParams.TIMESTAMP, callDetailRecord.timestamp);
         eventParams.put(EventParams.CONFIG, callDetailRecord.config);
         eventParams.put(EventParams.FROM, callDetailRecord.from);
         eventParams.put(EventParams.TO, callDetailRecord.to);

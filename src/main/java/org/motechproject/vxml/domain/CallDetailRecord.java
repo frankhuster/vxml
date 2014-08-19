@@ -1,6 +1,5 @@
 package org.motechproject.vxml.domain;
 
-import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
@@ -11,7 +10,7 @@ import java.util.Map;
 public class CallDetailRecord {
 
     @Field(required = true)
-    public DateTime timestamp;
+    public String timestamp;
 
     @Field
     public String config;
@@ -45,7 +44,7 @@ public class CallDetailRecord {
         callStatus = CallStatus.UNKNOWN;
     }
 
-    public CallDetailRecord(DateTime timestamp, String config, String from, String to, CallDirection callDirection,
+    public CallDetailRecord(String timestamp, String config, String from, String to, CallDirection callDirection,
                             CallStatus callStatus, String providerStatus, String motechCallId, String providerCallId,
                             Map<String, String> providerExtraData) {
         this();
