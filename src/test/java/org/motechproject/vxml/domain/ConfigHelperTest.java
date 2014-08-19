@@ -24,7 +24,8 @@ public class ConfigHelperTest {
         Map<String, String> callDetailMap = new HashMap<>();
         callDetailMap.put("recipient", "to");
 
-        config = new Config("Config", statusMap, callDetailMap, "+12065551212", "http://foo.com/bar");
+        config = new Config("Config", statusMap, callDetailMap, "ignoreme, ignoremetoo", "+12065551212",
+                "http://foo.com/bar");
     }
 
     @Test
@@ -42,6 +43,18 @@ public class ConfigHelperTest {
         assertEquals(1, callDetailRecord.providerExtraData.size());
         assertTrue(callDetailRecord.providerExtraData.keySet().contains("callStatus"));
         assertTrue(callDetailRecord.providerExtraData.values().contains("foo"));
+    }
+
+    @Test
+    public void shouldTruncateLongValue() {
+        CallDetailRecord callDetailRecord = new CallDetailRecord();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0 ; i<50 ; i++) {
+            sb.append("0123456789");
+        }
+        String value = sb.toString();
+        ConfigHelper.setCallDetail(config, "from", value, callDetailRecord);
+        assertEquals(callDetailRecord.from.length(), 255);
     }
 
     @Test

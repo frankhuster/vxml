@@ -1,5 +1,6 @@
 package org.motechproject.vxml.web;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
@@ -18,7 +19,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * todo
@@ -32,7 +36,6 @@ public class StatusController {
     private ConfigDataService configDataService;
     private MotechStatusMessage motechStatusMessage;
     private EventRelay eventRelay;
-    private static final int MAX_ENTITY_STRING_LENGTH = 255;
 
     @Autowired
     public StatusController(CallDetailRecordDataService callDetailRecordDataService, EventRelay eventRelay,
@@ -59,19 +62,22 @@ public class StatusController {
         logger.debug(String.format("handle(configName = %s, params = %s, headers = %s)", configName, params, headers));
 
         Config config = ConfigHelper.getConfig(configDataService, motechStatusMessage, configName);
+        Set<String> ignoreFields;
+
+        if (StringUtils.isBlank(config.ignoredFields)) {
+            ignoreFields = new HashSet<>();
+        }
+        else {
+            ignoreFields = new HashSet<>(Arrays.asList(config.ignoredFields.split(" *, *")));
+        }
 
         // Construct a CDR from the URL query parameters passed in the callback
         CallDetailRecord callDetailRecord = new CallDetailRecord();
         callDetailRecord.config = config.name;
         for (Map.Entry<String, String> entry : params.entrySet()) {
-            String value = entry.getValue();
-            if (value.length() > MAX_ENTITY_STRING_LENGTH) {
-                logger.warn("The value for {} exceeds {} characters and will be truncated.", entry.getKey(),
-                        MAX_ENTITY_STRING_LENGTH);
-                logger.warn("The complete value for {} is {}", entry.getKey(), entry.getValue());
-                value = value.substring(0, MAX_ENTITY_STRING_LENGTH);
+            if (!ignoreFields.contains(entry.getKey())) {
+                ConfigHelper.setCallDetail(config, entry.getKey(), entry.getValue(), callDetailRecord);
             }
-            ConfigHelper.setCallDetail(config, entry.getKey(), value, callDetailRecord);
         }
 
         // Use current time if the provider didn't provide a timestamp

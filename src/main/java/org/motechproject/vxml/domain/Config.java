@@ -31,6 +31,12 @@ public class Config {
     public Map<String, String> callDetailMap = new HashMap<>();
 
     /**
+     * A CSV list of fields that the IVR provider returns and should be not be included (ie: ignored) in the CDR data
+     */
+    @Field
+    public String ignoredFields;
+
+    /**
      * The phone number associated with this particular IVR provider config (eg: the receiving (to) number for incoming
      * (MO) calls or the sending (from) number for outgoing (MT) calls.
      */
@@ -49,11 +55,12 @@ public class Config {
     //todo: Remove when https://applab.atlassian.net/browse/MOTECH-1202 is fixed
     public Config() {  }
 
-    public Config(String name, Map<String, CallStatus> statusMap, Map<String, String> callDetailMap, String phoneNumber,
-                  String outgoingCallUriTemplate) {
+    public Config(String name, Map<String, CallStatus> statusMap, Map<String, String> callDetailMap,
+                  String ignoredFields, String phoneNumber, String outgoingCallUriTemplate) {
         this.name = name;
         this.statusMap = statusMap;
         this.callDetailMap = callDetailMap;
+        this.ignoredFields = ignoredFields;
         this.phoneNumber = phoneNumber;
         this.outgoingCallUriTemplate = outgoingCallUriTemplate;
     }
@@ -73,6 +80,7 @@ public class Config {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (statusMap != null ? statusMap.hashCode() : 0);
         result = 31 * result + (callDetailMap != null ? callDetailMap.hashCode() : 0);
+        result = 31 * result + (ignoredFields != null ? ignoredFields.hashCode() : 0);
         result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
         result = 31 * result + (outgoingCallUriTemplate != null ? outgoingCallUriTemplate.hashCode() : 0);
         return result;
@@ -84,6 +92,7 @@ public class Config {
                 "name='" + name + '\'' +
                 ", statusMap=" + statusMap +
                 ", callDetailMap=" + callDetailMap +
+                ", ignoredFields='" + ignoredFields + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", outgoingCallUriTemplate='" + outgoingCallUriTemplate + '\'' +
                 '}';

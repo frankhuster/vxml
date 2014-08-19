@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ConfigHelper {
     private static Logger logger = LoggerFactory.getLogger(ConfigHelper.class);
+    private static final int MAX_ENTITY_STRING_LENGTH = 255;
 
     /**
      * Maps a given statusString to a CallStatus, using the given domain's statusMap to first try to map the
@@ -51,6 +52,12 @@ public class ConfigHelper {
      * @param callDetailRecord
      */
     public static void setCallDetail(Config config, String key, String value, CallDetailRecord callDetailRecord) {
+        if (value.length() > MAX_ENTITY_STRING_LENGTH) {
+            logger.warn("The value for {} exceeds {} characters and will be truncated.", key, MAX_ENTITY_STRING_LENGTH);
+            logger.warn("The complete value for {} is {}", key, value);
+            value = value.substring(0, MAX_ENTITY_STRING_LENGTH);
+        }
+
         String fieldName;
         if (config.callDetailMap.containsKey(key)) {
             fieldName = config.callDetailMap.get(key);
