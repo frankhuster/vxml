@@ -79,7 +79,7 @@ public class OutboundCallServiceImpl implements OutboundCallService{
         //todo: add extra parameters to CDR?
         String from = config.outgoingCallUriParams.containsKey("from") ? config.outgoingCallUriParams.get("from") : params.containsKey("from") ? params.get("from") : "";
         String to = params.containsKey("to") ? params.get("to") : "";
-        callDetailRecordService.logFromMotech(config.name, from, to, CallDirection.OUTBOUND, CallStatus.API_INITIATED,
+        callDetailRecordService.logFromMotech(config.name, from, to, CallDirection.OUTBOUND, CallStatus.MOTECH_INITIATED,
                 motechCallId);
     }
 
