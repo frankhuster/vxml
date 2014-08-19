@@ -5,6 +5,8 @@ import org.motechproject.vxml.service.MotechStatusMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+
 /**
  * todo
  */
@@ -97,6 +99,25 @@ public class ConfigHelper {
         } catch (NoSuchFieldException e) {
             callDetailRecord.providerExtraData.put(fieldName, value);
         }
+    }
+
+    /**
+     * Returns a URI where all the placeholders that can be are substituted from outgoingCallUriParams
+     *
+     * @param config
+     * @return
+     */
+    public static String outgoingCallUri(Config config) {
+        String uri = config.outgoingCallUriTemplate;
+
+        for (Map.Entry<String, String> entry : config.outgoingCallUriParams.entrySet()) {
+            String placeholder = String.format("[%s]", entry.getKey());
+            if (uri.contains(placeholder)) {
+                uri = uri.replace(placeholder, entry.getValue());
+            }
+        }
+
+        return uri;
     }
 
     /**

@@ -1,15 +1,6 @@
 package org.motechproject.vxml.web;
 
-import org.motechproject.event.MotechEvent;
-import org.motechproject.event.listener.EventRelay;
-import org.motechproject.vxml.EventParams;
-import org.motechproject.vxml.EventSubjects;
-import org.motechproject.vxml.domain.CallDetailRecord;
-import org.motechproject.vxml.domain.Config;
-import org.motechproject.vxml.domain.ConfigHelper;
-import org.motechproject.vxml.repository.CallDetailRecordDataService;
-import org.motechproject.vxml.repository.ConfigDataService;
-import org.motechproject.vxml.service.MotechStatusMessage;
+import org.motechproject.vxml.service.OutboundCallService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,22 +18,15 @@ import java.util.Map;
 public class CallController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    private CallDetailRecordDataService callDetailRecordDataService;
-    private ConfigDataService configDataService;
-    private MotechStatusMessage motechStatusMessage;
-    private EventRelay eventRelay;
+    private OutboundCallService outboundCallService;
 
     @Autowired
-    public CallController(CallDetailRecordDataService callDetailRecordDataService, EventRelay eventRelay,
-                            ConfigDataService configDataService, MotechStatusMessage motechStatusMessage) {
-        this.callDetailRecordDataService = callDetailRecordDataService;
-        this.eventRelay = eventRelay;
-        this.configDataService = configDataService;
-        this.motechStatusMessage = motechStatusMessage;
+    public CallController(OutboundCallService outboundCallService) {
+        this.outboundCallService = outboundCallService;
     }
 
     /**
-     * todo
+     * Initiates an outbound call
      *
      * @param configName
      * @param params
@@ -61,23 +45,6 @@ public class CallController {
 
         logger.debug(String.format("handle(configName = %s, params = %s, headers = %s)", configName, params, headers));
 
-        Config config = ConfigHelper.getConfig(configDataService, motechStatusMessage, configName);
-
-
-        // Construct a CDR from the URL query parameters passed in the callback
-        CallDetailRecord callDetailRecord = new CallDetailRecord();
-        callDetailRecord.config = config.name;
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            ConfigHelper.setCallDetail(config, entry.getKey(), entry.getValue(), callDetailRecord);
-        }
-
-        // Generate a MOTECH event
-        Map<String, Object> eventParams = EventParams.eventParamsFromCallDetailRecord(callDetailRecord);
-        eventRelay.sendEventMessage(new MotechEvent(EventSubjects.subjectFromCallStatus(callDetailRecord.callStatus),
-                eventParams));
-
-        // Log the status
-        logger.debug("Saving CallDetailRecord {}", callDetailRecord);
-        callDetailRecordDataService.create(callDetailRecord);
+        outboundCallService.initiateCall(configName, params);
     }
 }

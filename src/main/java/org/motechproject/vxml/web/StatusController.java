@@ -78,11 +78,14 @@ public class StatusController {
         CallDetailRecord callDetailRecord = new CallDetailRecord();
         callDetailRecord.config = config.name;
         for (Map.Entry<String, String> entry : params.entrySet()) {
-            if (!ignoreFields.contains(entry.getKey())) {
+            if (ignoreFields.contains(entry.getKey())) {
+                logger.debug("Ignoring provider field {}: {}", entry.getKey(), entry.getValue());
+            }
+            else {
                 ConfigHelper.setCallDetail(config, entry.getKey(), entry.getValue(), callDetailRecord);
             }
         }
-
+        
         // Use current time if the provider didn't provide a timestamp
         if (null == callDetailRecord.timestamp) {
             callDetailRecord.timestamp = callDetailRecordService.currentTime();
@@ -93,7 +96,7 @@ public class StatusController {
         eventRelay.sendEventMessage(new MotechEvent(EventSubjects.subjectFromCallStatus(callDetailRecord.callStatus),
                 eventParams));
 
-        // Log the status
+        // Save the CDR
         logger.debug("Saving CallDetailRecord {}", callDetailRecord);
         callDetailRecordDataService.create(callDetailRecord);
     }

@@ -60,7 +60,9 @@ public class OutboundCallServiceIT extends BasePaxIT {
         //Create a config
         Map<String, CallStatus> statusMap = new HashMap<>();
         Map<String, String> callDetailMap = new HashMap<>();
-        Config config = new Config("conf123", statusMap, callDetailMap, "", "+12065551212", server.getUri());
+        Map<String, String> outgoingCallUriParams = new HashMap<>();
+        Config config = new Config("conf123", statusMap, callDetailMap, "", "+12065551212", server.getUri(),
+                outgoingCallUriParams);
         configDataService.create(config);
 
         Map<String, String> params = new HashMap<>();
@@ -80,7 +82,9 @@ public class OutboundCallServiceIT extends BasePaxIT {
         //Create a config
         Map<String, CallStatus> statusMap = new HashMap<>();
         Map<String, String> callDetailMap = new HashMap<>();
-        Config config = new Config("conf456", statusMap, callDetailMap, "", "+12065551212", server.getUri());
+        Map<String, String> outgoingCallUriParams = new HashMap<>();
+        Config config = new Config("conf456", statusMap, callDetailMap, "", "+12065551212", server.getUri(),
+                outgoingCallUriParams);
         configDataService.create(config);
 
         boolean exceptionThrown = false;

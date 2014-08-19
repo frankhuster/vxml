@@ -16,6 +16,12 @@ public class ConfigHelperTest {
 
     private Config config;
 
+    private static final String TOKEN_KEY = "tok";
+    private static final String TOKEN_VALUE = "68496w84ef682f6des8";
+    private static final String OUTGOING_URI_TEMPLATE_FORMAT = "http://foo.com/bar?token=%s";
+    private static final String OUTGOING_URI_TEMPLATE = String.format(OUTGOING_URI_TEMPLATE_FORMAT,
+            String.format("[%s]", TOKEN_KEY));
+
     @Before
     public void setup() {
         Map<String, CallStatus> statusMap = new HashMap<>();
@@ -24,8 +30,11 @@ public class ConfigHelperTest {
         Map<String, String> callDetailMap = new HashMap<>();
         callDetailMap.put("recipient", "to");
 
-        config = new Config("Config", statusMap, callDetailMap, "ignoreme, ignoremetoo", "+12065551212",
-                "http://foo.com/bar");
+        Map<String, String> outgoingCallUriParams = new HashMap<>();
+        outgoingCallUriParams.put(TOKEN_KEY, TOKEN_VALUE);
+
+        config = new Config("Config", statusMap, callDetailMap, "ignore1, ignore2", "+12065551212",
+                OUTGOING_URI_TEMPLATE, outgoingCallUriParams);
     }
 
     @Test
@@ -79,5 +88,13 @@ public class ConfigHelperTest {
         ConfigHelper.setCallDetail(config, "provider-specific-stuff", "specific-value", callDetailRecord);
         assertTrue(callDetailRecord.providerExtraData.containsKey("provider-specific-stuff"));
         assertEquals("specific-value", callDetailRecord.providerExtraData.get("provider-specific-stuff"));
+    }
+
+    //todo: test 'ignored' fields
+
+    @Test
+    public void shouldSubstituteOutgoingCallUriParameters() {
+        String expectedUriTemplate = String.format(OUTGOING_URI_TEMPLATE_FORMAT, TOKEN_VALUE);
+        assertEquals(expectedUriTemplate, ConfigHelper.outgoingCallUri(config));
     }
 }

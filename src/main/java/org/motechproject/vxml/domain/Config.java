@@ -51,18 +51,27 @@ public class Config {
     @Field
     public String outgoingCallUriTemplate;
 
+    /**
+     * A map of parameters to be substituted to the outgoing URI template
+     */
+    @Field
+    public Map<String, String> outgoingCallUriParams = new HashMap<>();
+
+
     //todo: This constructor needed to avoid an MDS error when creating an entity using the MDS Data Browser UI...
     //todo: Remove when https://applab.atlassian.net/browse/MOTECH-1202 is fixed
     public Config() {  }
 
     public Config(String name, Map<String, CallStatus> statusMap, Map<String, String> callDetailMap,
-                  String ignoredFields, String phoneNumber, String outgoingCallUriTemplate) {
+                  String ignoredFields, String phoneNumber, String outgoingCallUriTemplate,
+                  Map<String, String> outgoingCallUriParams) {
         this.name = name;
         this.statusMap = statusMap;
         this.callDetailMap = callDetailMap;
         this.ignoredFields = ignoredFields;
         this.phoneNumber = phoneNumber;
         this.outgoingCallUriTemplate = outgoingCallUriTemplate;
+        this.outgoingCallUriParams = outgoingCallUriParams;
     }
 
     @Override
@@ -83,6 +92,7 @@ public class Config {
         result = 31 * result + (ignoredFields != null ? ignoredFields.hashCode() : 0);
         result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
         result = 31 * result + (outgoingCallUriTemplate != null ? outgoingCallUriTemplate.hashCode() : 0);
+        result = 31 * result + (outgoingCallUriParams != null ? outgoingCallUriParams.hashCode() : 0);
         return result;
     }
 
@@ -95,6 +105,7 @@ public class Config {
                 ", ignoredFields='" + ignoredFields + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", outgoingCallUriTemplate='" + outgoingCallUriTemplate + '\'' +
+                ", outgoingCallUriParams='" + outgoingCallUriParams + '\'' +
                 '}';
     }
 }

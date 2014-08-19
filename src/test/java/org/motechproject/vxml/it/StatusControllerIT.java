@@ -81,7 +81,9 @@ public class StatusControllerIT extends BasePaxIT {
         //Create a config
         Map<String, CallStatus> statusMap = new HashMap<>();
         Map<String, String> callDetailMap = new HashMap<>();
-        Config config = new Config("foo", statusMap, callDetailMap, "", "+12065551212", "http://foo.com/bar");
+        Map<String, String> outgoingCallUriParams = new HashMap<>();
+        Config config = new Config("foo", statusMap, callDetailMap, "", "+12065551212", "http://foo.com/bar",
+                outgoingCallUriParams);
         configDataService.create(config);
 
         //Create & send a CDR status callback
