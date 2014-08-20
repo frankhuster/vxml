@@ -98,7 +98,7 @@ public class CallDetailRecord {
     public String toString() {
         return "CallDetailRecord{" +
                 "timestamp=" + timestamp +
-                ", domain='" + config + '\'' +
+                ", config='" + config + '\'' +
                 ", from='" + from + '\'' +
                 ", to='" + to + '\'' +
                 ", callDirection=" + callDirection +

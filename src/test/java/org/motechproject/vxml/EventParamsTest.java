@@ -19,7 +19,7 @@ public class EventParamsTest {
         //Construct a CDR
         Map<String, String> extraData = new HashMap<>();
         extraData.put("foo", "bar");
-        CallDetailRecord callDetailRecord = new CallDetailRecord("sometime", "domain", "from", "to",
+        CallDetailRecord callDetailRecord = new CallDetailRecord("sometime", "config", "from", "to",
                 CallDirection.INBOUND, CallStatus.ANSWERED, "motechCallId", "providerCallId", extraData);
 
         //Pass service to eventParamsFromCallDetailRecord
@@ -27,7 +27,7 @@ public class EventParamsTest {
 
         //Verify all data was passed properly
         assertEquals("sometime", eventParams.get(EventParams.TIMESTAMP));
-        assertEquals("domain", eventParams.get(EventParams.CONFIG));
+        assertEquals("config", eventParams.get(EventParams.CONFIG));
         assertEquals("from", eventParams.get(EventParams.FROM));
         assertEquals("to", eventParams.get(EventParams.TO));
         assertEquals(CallDirection.INBOUND, eventParams.get(EventParams.CALL_DIRECTION));

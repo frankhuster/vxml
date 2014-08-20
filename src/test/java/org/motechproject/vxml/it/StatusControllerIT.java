@@ -69,7 +69,7 @@ public class StatusControllerIT extends BasePaxIT {
         HttpResponse response = new DefaultHttpClient().execute(httpGet);
         assertEquals(HttpStatus.SC_INTERNAL_SERVER_ERROR, response.getStatusLine().getStatusCode());
 
-        //Verify we did not log this CDR because service contains an invalid domain
+        //Verify we did not log this CDR because service contains an invalid config
         List<CallDetailRecord> callDetailRecords = callDetailRecordDataService.retrieveAll();
         assertEquals(0, callDetailRecords.size());
     }

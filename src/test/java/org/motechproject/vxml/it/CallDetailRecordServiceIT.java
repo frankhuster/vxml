@@ -62,7 +62,7 @@ public class CallDetailRecordServiceIT extends BasePaxIT {
         // logFromMotech
         //
         String motechCallId = UUID.randomUUID().toString();
-        callDetailRecordService.logFromMotech("domain-a", "from", "to", CallDirection.OUTBOUND, CallStatus.IN_PROGRESS,
+        callDetailRecordService.logFromMotech("config-a", "from", "to", CallDirection.OUTBOUND, CallStatus.IN_PROGRESS,
                 motechCallId);
         logger.info("created call record with motechCallId {}", motechCallId);
         List<CallDetailRecord> callDetailRecords = callDetailRecordDataService.findByMotechCallId(motechCallId);
@@ -74,16 +74,16 @@ public class CallDetailRecordServiceIT extends BasePaxIT {
         // logFromProvider
         //
         motechCallId = UUID.randomUUID().toString();
-        callDetailRecordService.logFromMotech("domain-b", "from", "to", CallDirection.INBOUND, CallStatus.IN_PROGRESS,
+        callDetailRecordService.logFromMotech("config-b", "from", "to", CallDirection.INBOUND, CallStatus.IN_PROGRESS,
                 motechCallId);
         logger.info("created call record with motechCallId {}", motechCallId);
 
         String providerCallId = "SOMEPROVIDER-" + UUID.randomUUID().toString();
-        callDetailRecordService.logFromProvider("domain-b", "from", "to", CallDirection.INBOUND, CallStatus.BUSY,
+        callDetailRecordService.logFromProvider("config-b", "from", "to", CallDirection.INBOUND, CallStatus.BUSY,
                 motechCallId, providerCallId, quickieMap("foo", "bar", "baz", "bat"));
         logger.info("created call record with motechCallId {} & providerCallId {}", motechCallId, providerCallId);
 
-        callDetailRecordService.logFromProvider("domain-b", "from", "to", CallDirection.INBOUND, CallStatus.ANSWERED,
+        callDetailRecordService.logFromProvider("config-b", "from", "to", CallDirection.INBOUND, CallStatus.ANSWERED,
                 null, providerCallId, quickieMap("goo", "zar", "zaz", "zat"));
         logger.info("created call record with providerCallId {}", providerCallId);
 

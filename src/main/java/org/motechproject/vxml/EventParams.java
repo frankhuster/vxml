@@ -19,7 +19,7 @@ public final class EventParams {
     /**
      * Config that was used for this message
      */
-    public static final String CONFIG = "domain";
+    public static final String CONFIG = "config";
     /**
      * Phone number that the call was issued from
      */
@@ -29,25 +29,25 @@ public final class EventParams {
      */
     public static final String TO = "to";
     /**
-     * Call direction  -  INBOUND (MO) or OUTBOUND (MT)
+     * Call direction  -  INBOUND (MO) or OUTBOUND (MT) or UNKNOWN
      */
-    public static final String CALL_DIRECTION = "callDirection";
+    public static final String CALL_DIRECTION = "call_direction";
     /**
      * Call status
      */
-    public static final String CALL_STATUS = "callStatus";
+    public static final String CALL_STATUS = "call_status";
     /**
      * MOTECH call id - a MOTECH-generated GUID
      */
-    public static final String MOTECH_CALL_ID = "motechCallId";
+    public static final String MOTECH_CALL_ID = "motech_call_id";
     /**
      * Provider call id - provider-generated id
      */
-    public static final String PROVIDER_CALL_ID = "providerCallId";
+    public static final String PROVIDER_CALL_ID = "provider_call_id";
     /**
      * Provider extra data
      */
-    public static final String PROVIDER_EXTRA_DATA = "providerExtraData";
+    public static final String PROVIDER_EXTRA_DATA = "provider_extra_data";
 
     /**
      * Create a MOTECH event parameters map payload from a given {@link org.motechproject.vxml.domain.CallDetailRecord}.

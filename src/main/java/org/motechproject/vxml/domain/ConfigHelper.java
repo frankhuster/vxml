@@ -15,8 +15,8 @@ public class ConfigHelper {
     private static final int MAX_ENTITY_STRING_LENGTH = 255;
 
     /**
-     * Maps a given statusString to a CallStatus, using the given domain's statusMap to first try to map the
-     * string to a status. If no match has been found in the domain's statusMap tries to match the string to the literal
+     * Maps a given statusString to a CallStatus, using the given config's statusMap to first try to map the
+     * string to a status. If no match has been found in the config's statusMap tries to match the string to the literal
      * value of the CallStatus. If all fails, return CallStatus.UNKNOWN and add a warning in the log.
      *
      * @param config

@@ -14,7 +14,7 @@
     <context:component-scan base-package="org.motechproject.vxml"/>
 
     <bean id="moduleRegistrationData" class="org.motechproject.osgi.web.ModuleRegistrationData">
-        <constructor-arg name="moduleName" value="vxml.module"/>
+        <constructor-arg name="moduleName" value="vxml_module"/>
         <constructor-arg name="i18n">
             <map>
                 <entry key="messages" value="../vxml/resources/messages/"/>
