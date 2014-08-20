@@ -64,8 +64,8 @@ public class StatusController {
      */
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    @RequestMapping(value = "/{configName}")
-    public void handle(@PathVariable String configName, @RequestParam Map<String, String> params,
+    @RequestMapping(value = "/{configName}", produces = "text/xml")
+    public String handle(@PathVariable String configName, @RequestParam Map<String, String> params,
                        @RequestHeader Map<String, String> headers) {
         logger.debug(String.format("handle(configName = %s, params = %s, headers = %s)", configName, params, headers));
 
@@ -103,5 +103,7 @@ public class StatusController {
         // Save the CDR
         logger.debug("Saving CallDetailRecord {}", callDetailRecord);
         callDetailRecordDataService.create(callDetailRecord);
+
+        return "<?xml version=\"1.0\"?>\n<vxml version=\"2.1\"><form></form></vxml>";
     }
 }
