@@ -98,7 +98,9 @@ public class StatusController {
 
         // Generate a MOTECH event
         Map<String, Object> eventParams = EventParams.eventParamsFromCallDetailRecord(callDetailRecord);
-        eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CALL_STATUS, eventParams));
+        MotechEvent event = new MotechEvent(EventSubjects.CALL_STATUS, eventParams);
+        logger.debug("Sending MotechEvent {}", event.toString());
+        eventRelay.sendEventMessage(event);
 
         // Save the CDR
         logger.debug("Saving CallDetailRecord {}", callDetailRecord);
