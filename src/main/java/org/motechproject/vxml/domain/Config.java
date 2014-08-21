@@ -7,6 +7,7 @@ import org.motechproject.vxml.service.MotechStatusMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Unique;
 import java.util.HashMap;
 import java.util.List;
@@ -28,17 +29,18 @@ public class Config {
     private String name;
 
     /**
-     * CSV list of fields the IVR provider sends to the status controller which shouldn't be included (ie: ignored) in
+     * List of fields the IVR provider sends to the status controller which shouldn't be included (ie: ignored) in
      * the CDR data
      */
     @Field
-    private String ignoredStatusFields;
+    private List<String> ignoredStatusFields;
 
     /**
      * Template string used to issue an HTTP GET call to the IVR provider in order to initiate an outgoing (MT) call.
      * [xxx] placeholders are replaced with the values provided in the initiateCall() method.
      */
     @Field
+    @Column(length = 5*1024)
     private String outgoingCallUriTemplate;
 
     /**
@@ -51,22 +53,31 @@ public class Config {
      * A map of parameters to be substituted in the outgoing URI template
      */
     @Field
-    private Map<String, String> outgoingCallParams = new HashMap<>();
+    private Map<String, String> statusMap = new HashMap<>();
 
-    public Config(String name, String ignoredStatusFields, String outgoingCallUriTemplate,
-                  HttpMethod outgoingCallMethod, Map<String, String> outgoingCallParams) {
+    public Config(String name, List<String> ignoredStatusFields, Map<String, String> statusMap,
+                  HttpMethod outgoingCallMethod, String outgoingCallUriTemplate) {
         this.name = name;
         this.ignoredStatusFields = ignoredStatusFields;
         this.outgoingCallUriTemplate = outgoingCallUriTemplate;
         this.outgoingCallMethod = outgoingCallMethod;
-        this.outgoingCallParams = outgoingCallParams;
+        this.statusMap = statusMap;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getIgnoredStatusFields() {
+    /**
+     * Quick way of knowing if a field supplied by the IVR provider in the status callback should be ignored
+     *
+     * @return true if the given field should be ignored, false otherwise
+     */
+    public boolean shouldIgnoreField(String fieldName) {
+        return (null != ignoredStatusFields && ignoredStatusFields.contains(fieldName));
+    }
+
+    public List<String> getIgnoredStatusFields() {
         return ignoredStatusFields;
     }
 
@@ -78,26 +89,8 @@ public class Config {
         return outgoingCallMethod;
     }
 
-    public Map<String, String> getOutgoingCallParams() {
-        return outgoingCallParams;
-    }
-
-    /**
-     * Returns a URI where all the placeholders that can be are substituted from outgoingCallParams
-     *
-     * @return
-     */
-    public String outgoingCallUri() {
-        String uri = outgoingCallUriTemplate;
-
-        for (Map.Entry<String, String> entry : outgoingCallParams.entrySet()) {
-            String placeholder = String.format("[%s]", entry.getKey());
-            if (uri.contains(placeholder)) {
-                uri = uri.replace(placeholder, entry.getValue());
-            }
-        }
-
-        return uri;
+    public Map<String, String> getStatusMap() {
+        return statusMap;
     }
 
     /**
@@ -132,6 +125,22 @@ public class Config {
         return configs.get(0);
     }
 
+    /**
+     * When pinging Motech back to provide call status, IVR providers sometimes send fields with different names than
+     * those that are used by the system. For example the originating number is sometimes provided as 'callerid' whereas
+     * Motech uses the name 'from'. The statusMap config field contains such a mapping of field names. And
+     * mapStatusField() returns that mapping or the original field name if no mapping exists.
+     *
+     * @param fieldName
+     * @return
+     */
+    public String mapStatusField(String fieldName) {
+        if (null != statusMap && statusMap.containsKey(fieldName)) {
+            return statusMap.get(fieldName);
+        }
+        return fieldName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -148,7 +157,7 @@ public class Config {
         result = 31 * result + (ignoredStatusFields != null ? ignoredStatusFields.hashCode() : 0);
         result = 31 * result + (outgoingCallUriTemplate != null ? outgoingCallUriTemplate.hashCode() : 0);
         result = 31 * result + (outgoingCallMethod != null ? outgoingCallMethod.hashCode() : 0);
-        result = 31 * result + (outgoingCallParams != null ? outgoingCallParams.hashCode() : 0);
+        result = 31 * result + (statusMap != null ? statusMap.hashCode() : 0);
         return result;
     }
 
@@ -159,7 +168,7 @@ public class Config {
                 ", ignoredStatusFields='" + ignoredStatusFields + '\'' +
                 ", outgoingCallUriTemplate='" + outgoingCallUriTemplate + '\'' +
                 ", outgoingCallMethod='" + outgoingCallMethod + '\'' +
-                ", outgoingCallParams='" + outgoingCallParams + '\'' +
+                ", statusMap='" + statusMap + '\'' +
                 '}';
     }
 }

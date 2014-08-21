@@ -1,7 +1,6 @@
 package org.motechproject.vxml.it;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -45,9 +44,7 @@ public class ConfigDataServiceIT extends BasePaxIT {
     public void verifyServiceFunctional() {
         logger.info("verifyServiceFunctional");
 
-        Map<String, String> outgoingCallUriParams = new HashMap<>();
-
-        Config myConfig = new Config("MyConfig", null, "http://foo.com/bar", HttpMethod.GET, outgoingCallUriParams);
+        Config myConfig = new Config("MyConfig", null, null, HttpMethod.GET, "http://foo.com/bar");
         configDataService.create(myConfig);
 
         Config config = Config.getConfig(configDataService, null, "MyConfig");
@@ -59,29 +56,25 @@ public class ConfigDataServiceIT extends BasePaxIT {
     public void shouldNotCreateDuplicateConfigs() {
         logger.info("shouldNotCreateDuplicateConfigs");
 
-        Map<String, String> outgoingCallUriParams = new HashMap<>();
-
-        Config myConfig = new Config("MyConfig", null, "http://foo.com/bar", HttpMethod.GET, outgoingCallUriParams);
+        Config myConfig = new Config("MyConfig", null, null, HttpMethod.GET, "http://foo.com/bar");
         configDataService.create(myConfig);
 
-        Config myIdenticalConfig = new Config("MyConfig", null, "http://foo.com/bar", HttpMethod.GET,
-                outgoingCallUriParams);
+        Config myIdenticalConfig = new Config("MyConfig", null, null, HttpMethod.GET, "http://foo.com/bar");
         configDataService.create(myIdenticalConfig);
     }
 
-    //todo: enable (or nuke) when MOTECH-1237 is fixed (or not)
-    @Ignore
+    @Test
     public void shouldStoreLongOutgoingCallUriTemplates() {
         logger.info("shouldStoreLongOutgoingCallUriTemplates");
 
         Map<String, String> outgoingCallUriParams = new HashMap<>();
         StringBuilder sb = new StringBuilder();
-        for (int i = 0 ; i<50 ; i++) {
+        for (int i = 0 ; i<100 ; i++) {
             sb.append("0123456789");
         }
         String longURI = sb.toString();
 
-        Config myConfig = new Config("MyConfig", null, longURI, HttpMethod.GET, outgoingCallUriParams);
+        Config myConfig = new Config("MyConfig", null, null, HttpMethod.GET, longURI);
         configDataService.create(myConfig);
 
         Config configFromDatabase = Config.getConfig(configDataService, null, "MyConfig");

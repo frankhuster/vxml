@@ -1,6 +1,5 @@
 package org.motechproject.vxml.web;
 
-import org.apache.commons.lang.StringUtils;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.vxml.EventParams;
@@ -18,10 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * todo
@@ -59,19 +55,11 @@ public class StatusController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     @RequestMapping(value = "/{configName}", produces = "text/xml")
-    public String handle(@PathVariable String configName, @RequestParam Map<String, String> params,
+    public void handle(@PathVariable String configName, @RequestParam Map<String, String> params,
                        @RequestHeader Map<String, String> headers) {
         logger.debug(String.format("handle(configName = %s, params = %s, headers = %s)", configName, params, headers));
 
         Config config = Config.getConfig(configDataService, motechStatusMessage, configName);
-        Set<String> ignoreFields;
-
-        if (StringUtils.isBlank(config.getIgnoredStatusFields())) {
-            ignoreFields = new HashSet<>();
-        }
-        else {
-            ignoreFields = new HashSet<>(Arrays.asList(config.getIgnoredStatusFields().split(" *, *")));
-        }
 
         // Construct a CDR from the URL query parameters passed in the callback
         CallDetailRecord callDetailRecord = new CallDetailRecord();
@@ -79,11 +67,11 @@ public class StatusController {
         callDetailRecord.setConfigName(configName);
 
         for (Map.Entry<String, String> entry : params.entrySet()) {
-            if (ignoreFields.contains(entry.getKey())) {
-                logger.debug("Ignoring provider field {}: {}", entry.getKey(), entry.getValue());
+            if (config.shouldIgnoreField(entry.getKey())) {
+                logger.debug("Ignoring provider field '{}' with value '{}'", entry.getKey(), entry.getValue());
             }
             else {
-                callDetailRecord.setField(entry.getKey(), entry.getValue());
+                callDetailRecord.setField(config.mapStatusField(entry.getKey()), entry.getValue());
             }
         }
         
@@ -101,7 +89,5 @@ public class StatusController {
         // Save the CDR
         logger.debug("Saving CallDetailRecord {}", callDetailRecord);
         callDetailRecordDataService.create(callDetailRecord);
-
-        return "<?xml version=\"1.0\"?>\n<vxml version=\"2.1\"><form></form></vxml>";
     }
 }

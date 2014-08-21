@@ -2,31 +2,35 @@ package org.motechproject.vxml.domain;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Config Unit Tests
  */
 public class ConfigTest {
 
-    private static final String TOKEN_KEY = "tok";
-    private static final String TOKEN_VALUE = "68496w84ef682f6des8";
-    private static final String OUTGOING_URI_TEMPLATE_FORMAT = "http://foo.com/bar?token=%s";
-    private static final String OUTGOING_URI_TEMPLATE = String.format(OUTGOING_URI_TEMPLATE_FORMAT,
-            String.format("[%s]", TOKEN_KEY));
+    @Test
+    public void shouldIgnoreFields() {
 
-    //todo: test 'ignored' fields
+        Config config = new Config(null, new ArrayList<>(Arrays.asList("foo")), null, null, null);
+        assertTrue(config.shouldIgnoreField("foo"));
+        assertFalse(config.shouldIgnoreField("bar"));
+    }
 
     @Test
-    public void shouldSubstituteOutgoingCallUriParameters() {
-        Map<String, String> outgoingCallUriParams = new HashMap<>();
-        outgoingCallUriParams.put(TOKEN_KEY, TOKEN_VALUE);
+    public void verifyMappedStatusFields() {
+        Map<String, String> statusMap = new HashMap<>();
+        statusMap.put("foo", "bar");
 
-        Config config = new Config("Config", "ignore1, ignore2", OUTGOING_URI_TEMPLATE, HttpMethod.GET, outgoingCallUriParams);
-        String expectedUriTemplate = String.format(OUTGOING_URI_TEMPLATE_FORMAT, TOKEN_VALUE);
-        assertEquals(expectedUriTemplate, config.outgoingCallUri());
+        Config config = new Config(null, null, statusMap, null, null);
+        assertEquals("bar", config.mapStatusField("foo"));
+        assertEquals("zee", config.mapStatusField("zee"));
     }
 }

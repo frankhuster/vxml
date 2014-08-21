@@ -61,8 +61,7 @@ public class OutboundCallServiceIT extends BasePaxIT {
         logger.debug("verifyServiceFunctional - We have a server listening at {}", httpServerURI);
 
         //Create a config
-        Map<String, String> outgoingCallUriParams = new HashMap<>();
-        Config config = new Config("conf123", null, httpServerURI, HttpMethod.GET, outgoingCallUriParams);
+        Config config = new Config("conf123", null, null, HttpMethod.GET, httpServerURI);
         logger.debug("verifyServiceFunctional - We create a config  {}", config.toString());
         configDataService.create(config);
 
@@ -82,8 +81,7 @@ public class OutboundCallServiceIT extends BasePaxIT {
         logger.debug("shouldHandleInvalidServerResponse - We have a server listening at {}", httpServerURI);
 
         //Create a config
-        Map<String, String> outgoingCallUriParams = new HashMap<>();
-        Config config = new Config("conf456", "", httpServerURI, HttpMethod.GET, outgoingCallUriParams);
+        Config config = new Config("conf456", null, null, HttpMethod.GET, httpServerURI);
         logger.debug("shouldHandleInvalidServerResponse - We create a config  {}", config.toString());
         configDataService.create(config);
 

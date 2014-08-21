@@ -14,7 +14,6 @@ import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory
 import org.motechproject.vxml.domain.CallDetailRecord;
 import org.motechproject.vxml.domain.CallStatus;
 import org.motechproject.vxml.domain.Config;
-import org.motechproject.vxml.domain.HttpMethod;
 import org.motechproject.vxml.repository.CallDetailRecordDataService;
 import org.motechproject.vxml.repository.ConfigDataService;
 import org.ops4j.pax.exam.ExamFactory;
@@ -27,13 +26,10 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.jdo.JDOException;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Verify StatusController present & functional.
@@ -80,8 +76,7 @@ public class StatusControllerIT extends BasePaxIT {
         logger.info("verifyControllerFunctional");
 
         //Create a config
-        Map<String, String> outgoingCallUriParams = new HashMap<>();
-        Config config = new Config("foo", "", "http://foo.com/bar", HttpMethod.GET, outgoingCallUriParams);
+        Config config = new Config("foo", null, null, null, null);
         configDataService.create(config);
 
         //Create & send a CDR status callback
@@ -105,7 +100,6 @@ public class StatusControllerIT extends BasePaxIT {
         CallDetailRecord callDetailRecord = callDetailRecords.get(0);
         assertEquals(CallStatus.ANSWERED, callDetailRecord.getCallStatus());
         assertEquals(1, callDetailRecord.getProviderExtraData().keySet().size());
-        assertTrue(callDetailRecord.getProviderExtraData().keySet().contains("foo"));
-        assertTrue(callDetailRecord.getProviderExtraData().values().contains("bar"));
+        assertEquals(callDetailRecord.getProviderExtraData().get("foo"), "bar");
     }
 }

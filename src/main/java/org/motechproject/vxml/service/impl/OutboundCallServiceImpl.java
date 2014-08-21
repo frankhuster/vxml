@@ -76,7 +76,7 @@ public class OutboundCallServiceImpl implements OutboundCallService{
         }
 
         //todo: add extra parameters to CDR?
-        String from = config.getOutgoingCallParams().containsKey("from") ? config.getOutgoingCallParams().get("from") :
+        String from = config.getStatusMap().containsKey("from") ? config.getStatusMap().get("from") :
                 params.containsKey("from") ? params.get("from") : "";
         String to = params.containsKey("to") ? params.get("to") : "";
         callDetailRecordService.logFromMotech(config.getName(), from, to, CallDirection.OUTBOUND,
@@ -86,7 +86,7 @@ public class OutboundCallServiceImpl implements OutboundCallService{
     private HttpUriRequest generateHttpRequest(Config config, Map<String, String> params) {
         logger.info("generateHttpRequest(config = {}, params = {})", config, params);
 
-        String uri = config.outgoingCallUri();
+        String uri = config.getOutgoingCallUriTemplate();
         BasicHttpParams httpParams = new BasicHttpParams();
         for (Map.Entry<String, String> entry : params.entrySet()) {
             String placeholder = String.format("[%s]", entry.getKey());
