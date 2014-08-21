@@ -46,7 +46,7 @@ public class OutboundCallServiceImpl implements OutboundCallService{
     public void initiateCall(String configName, Map<String, String> params) {
         logger.info("initiateCall(configName = {}, params = {})", configName, params);
 
-        Config config = ConfigHelper.getConfig(configDataService, motechStatusMessage, configName);
+        Config config = Config.getConfig(configDataService, motechStatusMessage, configName);
 
         String motechCallId = UUID.randomUUID().toString();
         Map<String, String> completeParams = new HashMap<>(params);
@@ -76,16 +76,17 @@ public class OutboundCallServiceImpl implements OutboundCallService{
         }
 
         //todo: add extra parameters to CDR?
-        String from = config.outgoingCallParams.containsKey("from") ? config.outgoingCallParams.get("from") : params.containsKey("from") ? params.get("from") : "";
+        String from = config.getOutgoingCallParams().containsKey("from") ? config.getOutgoingCallParams().get("from") :
+                params.containsKey("from") ? params.get("from") : "";
         String to = params.containsKey("to") ? params.get("to") : "";
-        callDetailRecordService.logFromMotech(config.name, from, to, CallDirection.OUTBOUND, CallStatus.MOTECH_INITIATED,
-                motechCallId);
+        callDetailRecordService.logFromMotech(config.getName(), from, to, CallDirection.OUTBOUND,
+                CallStatus.MOTECH_INITIATED, motechCallId);
     }
 
     private HttpUriRequest generateHttpRequest(Config config, Map<String, String> params) {
         logger.info("generateHttpRequest(config = {}, params = {})", config, params);
 
-        String uri = ConfigHelper.outgoingCallUri(config);
+        String uri = config.outgoingCallUri();
         BasicHttpParams httpParams = new BasicHttpParams();
         for (Map.Entry<String, String> entry : params.entrySet()) {
             String placeholder = String.format("[%s]", entry.getKey());
@@ -97,7 +98,7 @@ public class OutboundCallServiceImpl implements OutboundCallService{
         }
 
         HttpUriRequest request;
-        if (HttpMethod.GET == config.outgoingCallMethod) {
+        if (HttpMethod.GET == config.getOutgoingCallMethod()) {
             request = new HttpGet(uri);
         }
         else {

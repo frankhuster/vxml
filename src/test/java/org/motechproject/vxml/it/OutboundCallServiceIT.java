@@ -67,11 +67,11 @@ public class OutboundCallServiceIT extends BasePaxIT {
         configDataService.create(config);
 
         Map<String, String> params = new HashMap<>();
-        outboundCallService.initiateCall(config.name, params);
+        outboundCallService.initiateCall(config.getName(), params);
 
         List<CallDetailRecord> callDetailRecords = callDetailRecordDataService.retrieveAll();
         assertEquals(1, callDetailRecords.size());
-        assertEquals("conf123", callDetailRecords.get(0).config);
+        assertEquals("conf123", callDetailRecords.get(0).getConfigName());
     }
 
     @Test

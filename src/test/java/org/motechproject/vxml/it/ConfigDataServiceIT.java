@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.vxml.domain.Config;
-import org.motechproject.vxml.domain.ConfigHelper;
 import org.motechproject.vxml.domain.HttpMethod;
 import org.motechproject.vxml.repository.ConfigDataService;
 import org.ops4j.pax.exam.ExamFactory;
@@ -51,7 +50,7 @@ public class ConfigDataServiceIT extends BasePaxIT {
         Config myConfig = new Config("MyConfig", null, "http://foo.com/bar", HttpMethod.GET, outgoingCallUriParams);
         configDataService.create(myConfig);
 
-        Config config = ConfigHelper.getConfig(configDataService, null, "MyConfig");
+        Config config = Config.getConfig(configDataService, null, "MyConfig");
         //Config config = configDataService.findByName("MyConfig");
         assertEquals(config, myConfig);
     }
@@ -85,7 +84,7 @@ public class ConfigDataServiceIT extends BasePaxIT {
         Config myConfig = new Config("MyConfig", null, longURI, HttpMethod.GET, outgoingCallUriParams);
         configDataService.create(myConfig);
 
-        Config configFromDatabase = ConfigHelper.getConfig(configDataService, null, "MyConfig");
-        assertEquals(configFromDatabase.outgoingCallUriTemplate, longURI);
+        Config configFromDatabase = Config.getConfig(configDataService, null, "MyConfig");
+        assertEquals(configFromDatabase.getOutgoingCallUriTemplate(), longURI);
     }
 }

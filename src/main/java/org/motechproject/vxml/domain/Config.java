@@ -2,9 +2,14 @@ package org.motechproject.vxml.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.vxml.repository.ConfigDataService;
+import org.motechproject.vxml.service.MotechStatusMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jdo.annotations.Unique;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -12,38 +17,41 @@ import java.util.Map;
  */
 @Entity
 public class Config {
+
+    private static Logger logger = LoggerFactory.getLogger(Config.class);
+
     /**
      * How a config is identified
      */
     @Field
     @Unique
-    public String name;
+    private String name;
 
     /**
      * CSV list of fields the IVR provider sends to the status controller which shouldn't be included (ie: ignored) in
      * the CDR data
      */
     @Field
-    public String ignoredStatusFields;
+    private String ignoredStatusFields;
 
     /**
      * Template string used to issue an HTTP GET call to the IVR provider in order to initiate an outgoing (MT) call.
      * [xxx] placeholders are replaced with the values provided in the initiateCall() method.
      */
     @Field
-    public String outgoingCallUriTemplate;
+    private String outgoingCallUriTemplate;
 
     /**
      * Which HTTP method should be used to trigger an outgoing call from the IVR provider
      */
     @Field
-    public HttpMethod outgoingCallMethod;
+    private HttpMethod outgoingCallMethod;
 
     /**
      * A map of parameters to be substituted in the outgoing URI template
      */
     @Field
-    public Map<String, String> outgoingCallParams = new HashMap<>();
+    private Map<String, String> outgoingCallParams = new HashMap<>();
 
     public Config(String name, String ignoredStatusFields, String outgoingCallUriTemplate,
                   HttpMethod outgoingCallMethod, Map<String, String> outgoingCallParams) {
@@ -52,6 +60,76 @@ public class Config {
         this.outgoingCallUriTemplate = outgoingCallUriTemplate;
         this.outgoingCallMethod = outgoingCallMethod;
         this.outgoingCallParams = outgoingCallParams;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getIgnoredStatusFields() {
+        return ignoredStatusFields;
+    }
+
+    public String getOutgoingCallUriTemplate() {
+        return outgoingCallUriTemplate;
+    }
+
+    public HttpMethod getOutgoingCallMethod() {
+        return outgoingCallMethod;
+    }
+
+    public Map<String, String> getOutgoingCallParams() {
+        return outgoingCallParams;
+    }
+
+    /**
+     * Returns a URI where all the placeholders that can be are substituted from outgoingCallParams
+     *
+     * @return
+     */
+    public String outgoingCallUri() {
+        String uri = outgoingCallUriTemplate;
+
+        for (Map.Entry<String, String> entry : outgoingCallParams.entrySet()) {
+            String placeholder = String.format("[%s]", entry.getKey());
+            if (uri.contains(placeholder)) {
+                uri = uri.replace(placeholder, entry.getValue());
+            }
+        }
+
+        return uri;
+    }
+
+    /**
+     * Returns a Config object from the database given a configName. Logs an error and sends a MotechStatusMessage if
+     * the configName doesn't exist in the database then throws an IllegalStateException
+     *
+     * @param configDataService  handle to the MDS service for the Config table
+     * @param motechStatusMessage  handle to the MotechStatusMessage service
+     * @param configName  name of the config to read from the database
+     * @return
+     */
+    public static Config getConfig(ConfigDataService configDataService, MotechStatusMessage motechStatusMessage,
+                                   String configName) {
+        List<Config> configs = configDataService.findAllByName(configName);
+        if (null == configs || configs.size() < 1) {
+            String msg = String.format("No matching config in the database for: %s", configName);
+            logger.error(msg);
+            if (null != motechStatusMessage) {
+                motechStatusMessage.alert(msg);
+            }
+            throw new IllegalArgumentException(msg);
+        }
+        if (configs.size() > 1) {
+            String msg = String.format("More than one matching config in the database for: %s\n%s", configName,
+                    configs.toString());
+            logger.error(msg);
+            if (null != motechStatusMessage) {
+                motechStatusMessage.alert(msg);
+            }
+            throw new IllegalArgumentException(msg);
+        }
+        return configs.get(0);
     }
 
     @Override

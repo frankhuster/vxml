@@ -7,7 +7,6 @@ import org.motechproject.vxml.EventParams;
 import org.motechproject.vxml.EventSubjects;
 import org.motechproject.vxml.domain.CallDetailRecord;
 import org.motechproject.vxml.domain.Config;
-import org.motechproject.vxml.domain.ConfigHelper;
 import org.motechproject.vxml.repository.CallDetailRecordDataService;
 import org.motechproject.vxml.repository.ConfigDataService;
 import org.motechproject.vxml.service.CallDetailRecordService;
@@ -17,12 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -69,31 +63,33 @@ public class StatusController {
                        @RequestHeader Map<String, String> headers) {
         logger.debug(String.format("handle(configName = %s, params = %s, headers = %s)", configName, params, headers));
 
-        Config config = ConfigHelper.getConfig(configDataService, motechStatusMessage, configName);
+        Config config = Config.getConfig(configDataService, motechStatusMessage, configName);
         Set<String> ignoreFields;
 
-        if (StringUtils.isBlank(config.ignoredStatusFields)) {
+        if (StringUtils.isBlank(config.getIgnoredStatusFields())) {
             ignoreFields = new HashSet<>();
         }
         else {
-            ignoreFields = new HashSet<>(Arrays.asList(config.ignoredStatusFields.split(" *, *")));
+            ignoreFields = new HashSet<>(Arrays.asList(config.getIgnoredStatusFields().split(" *, *")));
         }
 
         // Construct a CDR from the URL query parameters passed in the callback
         CallDetailRecord callDetailRecord = new CallDetailRecord();
-        callDetailRecord.config = config.name;
+
+        callDetailRecord.setConfigName(configName);
+
         for (Map.Entry<String, String> entry : params.entrySet()) {
             if (ignoreFields.contains(entry.getKey())) {
                 logger.debug("Ignoring provider field {}: {}", entry.getKey(), entry.getValue());
             }
             else {
-                ConfigHelper.setCallDetail(config, entry.getKey(), entry.getValue(), callDetailRecord);
+                callDetailRecord.setField(entry.getKey(), entry.getValue());
             }
         }
         
         // Use current time if the provider didn't provide a timestamp
-        if (null == callDetailRecord.timestamp) {
-            callDetailRecord.timestamp = callDetailRecordService.currentTime();
+        if (null == callDetailRecord.getTimestamp()) {
+            callDetailRecord.setTimestamp(callDetailRecordService.currentTime());
         }
 
         // Generate a MOTECH event

@@ -103,9 +103,9 @@ public class StatusControllerIT extends BasePaxIT {
         List<CallDetailRecord> callDetailRecords = callDetailRecordDataService.findByMotechCallId(motechCallId);
         assertEquals(1, callDetailRecords.size());
         CallDetailRecord callDetailRecord = callDetailRecords.get(0);
-        assertEquals(CallStatus.ANSWERED, callDetailRecord.callStatus);
-        assertEquals(1, callDetailRecord.providerExtraData.keySet().size());
-        assertTrue(callDetailRecord.providerExtraData.keySet().contains("foo"));
-        assertTrue(callDetailRecord.providerExtraData.values().contains("bar"));
+        assertEquals(CallStatus.ANSWERED, callDetailRecord.getCallStatus());
+        assertEquals(1, callDetailRecord.getProviderExtraData().keySet().size());
+        assertTrue(callDetailRecord.getProviderExtraData().keySet().contains("foo"));
+        assertTrue(callDetailRecord.getProviderExtraData().values().contains("bar"));
     }
 }

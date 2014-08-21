@@ -57,15 +57,15 @@ public final class EventParams {
      */
     public static Map<String, Object> eventParamsFromCallDetailRecord(CallDetailRecord callDetailRecord) {
         Map<String, Object> eventParams = new HashMap<>();
-        eventParams.put(EventParams.TIMESTAMP, callDetailRecord.timestamp);
-        eventParams.put(EventParams.CONFIG, callDetailRecord.config);
-        eventParams.put(EventParams.FROM, callDetailRecord.from);
-        eventParams.put(EventParams.TO, callDetailRecord.to);
-        eventParams.put(EventParams.CALL_DIRECTION, callDetailRecord.callDirection);
-        eventParams.put(EventParams.CALL_STATUS, callDetailRecord.callStatus);
-        eventParams.put(EventParams.MOTECH_CALL_ID, callDetailRecord.motechCallId);
-        eventParams.put(EventParams.PROVIDER_CALL_ID, callDetailRecord.providerCallId);
-        eventParams.put(EventParams.PROVIDER_EXTRA_DATA, callDetailRecord.providerExtraData);
+        eventParams.put(EventParams.TIMESTAMP, callDetailRecord.getTimestamp());
+        eventParams.put(EventParams.CONFIG, callDetailRecord.getConfigName());
+        eventParams.put(EventParams.FROM, callDetailRecord.getFrom());
+        eventParams.put(EventParams.TO, callDetailRecord.getTo());
+        eventParams.put(EventParams.CALL_DIRECTION, callDetailRecord.getCallDirection());
+        eventParams.put(EventParams.CALL_STATUS, callDetailRecord.getCallStatus());
+        eventParams.put(EventParams.MOTECH_CALL_ID, callDetailRecord.getMotechCallId());
+        eventParams.put(EventParams.PROVIDER_CALL_ID, callDetailRecord.getProviderCallId());
+        eventParams.put(EventParams.PROVIDER_EXTRA_DATA, callDetailRecord.getProviderExtraData());
         return eventParams;
     }
 }

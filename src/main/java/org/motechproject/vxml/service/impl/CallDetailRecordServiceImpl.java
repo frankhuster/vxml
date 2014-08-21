@@ -37,8 +37,8 @@ public class CallDetailRecordServiceImpl implements CallDetailRecordService {
                                 Map<String, String> providerExtraData) {
         List<CallDetailRecord> callDetailRecords = callDetailRecords = callDetailRecordDataService.findByProviderCallId(
                 providerCallId);
-        if (callDetailRecords.size() > 0 && StringUtils.isNotBlank(callDetailRecords.get(0).motechCallId)) {
-            motechCallId = callDetailRecords.get(0).motechCallId;
+        if (callDetailRecords.size() > 0 && StringUtils.isNotBlank(callDetailRecords.get(0).getMotechCallId())) {
+            motechCallId = callDetailRecords.get(0).getMotechCallId();
         }
         callDetailRecordDataService.create(new CallDetailRecord(currentTime(), config, from, to, callDirection,
                 callStatus, motechCallId, providerCallId, providerExtraData));

@@ -28,4 +28,4 @@ docs/build
 docs/env
 docs/source/packages.rst
 docs/source/org
-.tx/config
+.tx/configName
