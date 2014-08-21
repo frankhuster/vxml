@@ -54,7 +54,7 @@ public class CallDetailRecordServiceIT extends BasePaxIT {
     }
 
     @Test
-    public void verifyServiceFunctional() throws Exception {
+    public void verifyServiceFunctional() {
 
         logger.info("verifyServiceFunctional");
 

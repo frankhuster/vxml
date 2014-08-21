@@ -5,6 +5,7 @@ import org.motechproject.vxml.service.MotechStatusMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,25 +15,9 @@ public class ConfigHelper {
     private static Logger logger = LoggerFactory.getLogger(ConfigHelper.class);
     private static final int MAX_ENTITY_STRING_LENGTH = 255;
 
-    /**
-     * Maps a given statusString to a CallStatus, using the given config's statusMap to first try to map the
-     * string to a status. If no match has been found in the config's statusMap tries to match the string to the literal
-     * value of the CallStatus. If all fails, return CallStatus.UNKNOWN and add a warning in the log.
-     *
-     * @param config
-     * @param statusString
-     * @return
-     */
     private static CallStatus mapStatus(Config config, String statusString) {
-        if (config.statusMap.containsKey(statusString)) {
-            return config.statusMap.get(statusString);
-        }
-
         try {
-            CallStatus callStatus = CallStatus.valueOf(statusString);
-            if (statusString.equals(callStatus.toString())) {
-                return callStatus;
-            }
+                return CallStatus.valueOf(statusString);
         } catch (IllegalArgumentException e) { }
 
         logger.warn("Unknown status string: {}", statusString);
@@ -60,29 +45,28 @@ public class ConfigHelper {
             value = value.substring(0, MAX_ENTITY_STRING_LENGTH);
         }
 
-        String fieldName;
-        if (config.callDetailMap.containsKey(key)) {
-            fieldName = config.callDetailMap.get(key);
-        }
-        else {
-            fieldName = key;
-        }
         try {
-            java.lang.reflect.Field field = callDetailRecord.getClass().getField(fieldName);
+            java.lang.reflect.Field field = callDetailRecord.getClass().getField(key);
             Object object;
             try {
-                if (fieldName.equals("callStatus")) {
-                    object = mapStatus(config, value);
-                    if (CallStatus.UNKNOWN.equals(object)) {
+                if ("callStatus".equals(key)) {
+                    try {
+                        object = CallStatus.valueOf(value);
+                    } catch (IllegalArgumentException e) {
                         // Always add unknown call status to the provider extra data, for inspection
-                        callDetailRecord.providerExtraData.put(fieldName, value);
+                        logger.warn("Unknown callStatus: {}", value);
+                        callDetailRecord.providerExtraData.put(key, value);
+                        object = CallStatus.UNKNOWN;
                     }
                 }
-                else if (fieldName.equals("callDirection")) {
+                else if ("callDirection".equals(key)) {
                     try {
                         CallDirection callDirection = CallDirection.valueOf(value);
                         object = callDirection;
                     } catch (IllegalArgumentException e) {
+                        // Always add unknown call directions to the provider extra data, for inspection
+                        logger.warn("Unknown callDirection: {}", value);
+                        callDetailRecord.providerExtraData.put(key, value);
                         object = CallDirection.UNKNOWN;
                     }
                 }
@@ -93,11 +77,12 @@ public class ConfigHelper {
             } catch (IllegalAccessException e) {
                 // This should never happen as all CallDetailRecord fields should be accessible, but if somehow there
                 // happens to be a 'final' public field with the same name as a call detail key, then this will throw
-                throw new IllegalStateException(String.format("Unable to set call detail record field '%s' value:\n%s",
-                        fieldName, e));
+                throw new IllegalStateException(String.format(
+                        "Unable to set call detail record field '%s' to value '%s':\n%s", key, value, e));
             }
         } catch (NoSuchFieldException e) {
-            callDetailRecord.providerExtraData.put(fieldName, value);
+            logger.info("Extra data from provider: '{}': '{}'", key, value);
+            callDetailRecord.providerExtraData.put(key, value);
         }
     }
 
@@ -131,13 +116,24 @@ public class ConfigHelper {
      */
     public static Config getConfig(ConfigDataService configDataService, MotechStatusMessage motechStatusMessage,
                                    String configName) {
-        Config config = configDataService.findByName(configName);
-        if (null == config) {
+        List<Config> configs = configDataService.findAllByName(configName);
+        if (null == configs || configs.size() < 1) {
             String msg = String.format("No matching config in the database for: %s", configName);
             logger.error(msg);
-            motechStatusMessage.alert(msg);
+            if (null != motechStatusMessage) {
+                motechStatusMessage.alert(msg);
+            }
             throw new IllegalArgumentException(msg);
         }
-        return config;
+        if (configs.size() > 1) {
+            String msg = String.format("More than one matching config in the database for: %s\n%s", configName,
+                    configs.toString());
+            logger.error(msg);
+            if (null != motechStatusMessage) {
+                motechStatusMessage.alert(msg);
+            }
+            throw new IllegalArgumentException(msg);
+        }
+        return configs.get(0);
     }
 }

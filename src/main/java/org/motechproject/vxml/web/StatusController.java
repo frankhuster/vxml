@@ -72,11 +72,11 @@ public class StatusController {
         Config config = ConfigHelper.getConfig(configDataService, motechStatusMessage, configName);
         Set<String> ignoreFields;
 
-        if (StringUtils.isBlank(config.ignoredFields)) {
+        if (StringUtils.isBlank(config.ignoredStatusFields)) {
             ignoreFields = new HashSet<>();
         }
         else {
-            ignoreFields = new HashSet<>(Arrays.asList(config.ignoredFields.split(" *, *")));
+            ignoreFields = new HashSet<>(Arrays.asList(config.ignoredStatusFields.split(" *, *")));
         }
 
         // Construct a CDR from the URL query parameters passed in the callback

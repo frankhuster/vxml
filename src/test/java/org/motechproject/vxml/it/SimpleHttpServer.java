@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Super Simple HTTP Server
@@ -21,62 +23,68 @@ import java.net.InetSocketAddress;
  */
 public class SimpleHttpServer {
 
-    private String resource;
-    private int port;
-    private HttpServer server;
-    private int responseCode;
-    private String responseBody;
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final int MIN_PORT = 8080;
+    private static final int MAX_PORT = 9080;
 
-    public SimpleHttpServer(String resource, int responseCode, String responseBody) {
-        logger.debug(String.format("SimpleHttpServer()", resource, responseCode, responseBody));
-        this.responseCode = responseCode;
-        this.responseBody = responseBody;
-        this.resource = resource;
-        this.port = 8080;
-        int maxTries = 1000;
+    private class SimpleHttpHandler implements HttpHandler {
+        private Logger logger = LoggerFactory.getLogger(SimpleHttpHandler.class);
+        private int responseCode;
+        private String responseBody;
 
-        // Ghetto low tech: loop 1000 times to try to find an open port starting at 8080
+        public SimpleHttpHandler(int responseCode, String responseBody) {
+            //logger.debug("********** SimpleHttpHandler(responseCode={}, responseBody={})", responseCode, responseBody);
+            this.responseCode = responseCode;
+            this.responseBody = responseBody;
+        }
+
+        @Override
+        public void handle(HttpExchange httpExchange) throws IOException {
+            //logger.debug("handle(httpExchange={})", httpExchange);
+            //logger.debug("responseCode=%d, responseBody='%s'", responseCode, responseBody);
+            httpExchange.sendResponseHeaders(responseCode, responseBody.length());
+            OutputStream os = httpExchange.getResponseBody();
+            os.write(responseBody.getBytes());
+            os.close();
+        }
+    }
+
+    private int port = MIN_PORT;
+    private Set<HttpServer> servers = new HashSet<>();
+    private Logger logger = LoggerFactory.getLogger(SimpleHttpServer.class);
+
+    public String start(String resource, int responseCode, String responseBody) {
+        //logger.debug(String.format("********** start(resource='%s', responseCode=%d, responseBody='%s')", resource, responseCode, responseBody));
+
+        HttpServer server = null;
+        // Ghetto low tech: loop to find an open port
         do {
             try {
+                //logger.debug("********** Trying to create HttpServer at port {}", port);
                 server = HttpServer.create(new InetSocketAddress(port), 0);
+                servers.add(server);
+            }
+            catch (IOException e) {
+                port++;
+            }
+        } while (null == server && port < MAX_PORT);
+
+        if (port < MAX_PORT) {
+            //logger.debug("********** SimpleHttpServer created at port {}", port);
+            try {
+                server.createContext(String.format("/%s", resource), new SimpleHttpHandler(responseCode, responseBody));
+                server.setExecutor(null);
+                server.start();
+                String uri = String.format("http://localhost:%d/%s", port, resource);
+                //logger.debug(String.format("********** SimpleHttpServer listening at '%s' will return HTTP %d/%s", uri, responseCode, responseBody));
+                // Increase port number for the next guy...
+                port++;
+                return uri;
             }
             catch (Exception e) {
-                port++;
-                maxTries--;
+                throw new RuntimeException("Unable to start server: " + e);
             }
-        } while (null == server && maxTries > 0);
+        }
 
-        if (maxTries > 0) {
-            logger.debug("HttpServer created in {} tries", 1001-maxTries);
-            start();
-        }
-        else {
-            throw new RuntimeException("Unable to find an open port");
-        }
-    }
-
-    private void start() {
-        logger.debug("start()");
-        try {
-            server.createContext(String.format("/%s", resource), new HttpHandler() {
-                @Override
-                public void handle(HttpExchange httpExchange) throws IOException {
-                    httpExchange.sendResponseHeaders(responseCode, responseBody.length());
-                    OutputStream os = httpExchange.getResponseBody();
-                    os.write(responseBody.getBytes());
-                    os.close();
-                }
-            });
-            server.setExecutor(null);
-            server.start();
-        }
-        catch (Exception e) {
-            throw new RuntimeException("Unable to start server: " + e);
-        }
-    }
-
-    public String getUri() {
-        return String.format("http://localhost:%d/%s", port, resource);
+        throw new RuntimeException("Unable to find an open port");
     }
 }

@@ -48,24 +48,25 @@ public class OutboundCallServiceIT extends BasePaxIT {
     @Before
     public void setup() throws Exception {
         logger.info("setup()");
+        try { configDataService.deleteAll(); } catch (JDOException e) { }
         try { callDetailRecordDataService.deleteAll(); } catch (JDOException e) { }
     }
 
     @Test
-    public void verifyServiceFunctional() throws Exception {
+    public void verifyServiceFunctional() {
         logger.info("verifyServiceFunctional()");
 
-        SimpleHttpServer server = new SimpleHttpServer("foo", HttpStatus.SC_OK, "OK");
+        String httpServerURI = new SimpleHttpServer().start("foo", HttpStatus.SC_OK, "OK");
+        logger.debug("verifyServiceFunctional - We have a server listening at {}", httpServerURI);
 
         //Create a config
-        Map<String, CallStatus> statusMap = new HashMap<>();
-        Map<String, String> callDetailMap = new HashMap<>();
         Map<String, String> outgoingCallUriParams = new HashMap<>();
-        Config config = new Config("conf123", statusMap, callDetailMap, "", server.getUri(), outgoingCallUriParams);
+        Config config = new Config("conf123", null, httpServerURI, outgoingCallUriParams);
+        logger.debug("verifyServiceFunctional - We create a config  {}", config.toString());
         configDataService.create(config);
 
         Map<String, String> params = new HashMap<>();
-        outboundCallService.initiateCall("conf123", params);
+        outboundCallService.initiateCall(config.name, params);
 
         List<CallDetailRecord> callDetailRecords = callDetailRecordDataService.retrieveAll();
         assertEquals(1, callDetailRecords.size());
@@ -73,16 +74,16 @@ public class OutboundCallServiceIT extends BasePaxIT {
     }
 
     @Test
-    public void shouldHandleInvalidServerResponse() throws Exception {
+    public void shouldHandleInvalidServerResponse() {
         logger.info("shouldHandleInvalidServerResponse()");
 
-        SimpleHttpServer server = new SimpleHttpServer("bar", HttpStatus.SC_BAD_REQUEST, "Eeek!");
+        String httpServerURI = new SimpleHttpServer().start("bar", HttpStatus.SC_BAD_REQUEST, "Eeek!");
+        logger.debug("shouldHandleInvalidServerResponse - We have a server listening at {}", httpServerURI);
 
         //Create a config
-        Map<String, CallStatus> statusMap = new HashMap<>();
-        Map<String, String> callDetailMap = new HashMap<>();
         Map<String, String> outgoingCallUriParams = new HashMap<>();
-        Config config = new Config("conf456", statusMap, callDetailMap, "", server.getUri(), outgoingCallUriParams);
+        Config config = new Config("conf456", "", httpServerURI, outgoingCallUriParams);
+        logger.debug("shouldHandleInvalidServerResponse - We create a config  {}", config.toString());
         configDataService.create(config);
 
         boolean exceptionThrown = false;

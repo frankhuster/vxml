@@ -24,16 +24,10 @@ public class ConfigHelperTest {
 
     @Before
     public void setup() {
-        Map<String, CallStatus> statusMap = new HashMap<>();
-        statusMap.put("answered", CallStatus.ANSWERED);
-
-        Map<String, String> callDetailMap = new HashMap<>();
-        callDetailMap.put("recipient", "to");
-
         Map<String, String> outgoingCallUriParams = new HashMap<>();
         outgoingCallUriParams.put(TOKEN_KEY, TOKEN_VALUE);
 
-        config = new Config("Config", statusMap, callDetailMap, "ignore1, ignore2", OUTGOING_URI_TEMPLATE,
+        config = new Config("Config", "ignore1, ignore2", OUTGOING_URI_TEMPLATE,
                 outgoingCallUriParams);
     }
 
@@ -41,7 +35,7 @@ public class ConfigHelperTest {
     public void shouldSetCallDetailStatus() {
         CallDetailRecord callDetailRecord = new CallDetailRecord();
         ConfigHelper.setCallDetail(config, "callStatus", "answered", callDetailRecord);
-        assertEquals(CallStatus.ANSWERED, callDetailRecord.callStatus);
+        assertEquals("answered", callDetailRecord.providerExtraData.get("callStatus"));
     }
 
     @Test
@@ -78,7 +72,7 @@ public class ConfigHelperTest {
     @Test
     public void shouldSetCallDetail() {
         CallDetailRecord callDetailRecord = new CallDetailRecord();
-        ConfigHelper.setCallDetail(config, "recipient", "+12065551212", callDetailRecord);
+        ConfigHelper.setCallDetail(config, "to", "+12065551212", callDetailRecord);
         assertEquals("+12065551212", callDetailRecord.to);
     }
 
