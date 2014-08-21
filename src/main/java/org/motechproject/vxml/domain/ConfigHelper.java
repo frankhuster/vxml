@@ -87,7 +87,7 @@ public class ConfigHelper {
     }
 
     /**
-     * Returns a URI where all the placeholders that can be are substituted from outgoingCallUriParams
+     * Returns a URI where all the placeholders that can be are substituted from outgoingCallParams
      *
      * @param config
      * @return
@@ -95,7 +95,7 @@ public class ConfigHelper {
     public static String outgoingCallUri(Config config) {
         String uri = config.outgoingCallUriTemplate;
 
-        for (Map.Entry<String, String> entry : config.outgoingCallUriParams.entrySet()) {
+        for (Map.Entry<String, String> entry : config.outgoingCallParams.entrySet()) {
             String placeholder = String.format("[%s]", entry.getKey());
             if (uri.contains(placeholder)) {
                 uri = uri.replace(placeholder, entry.getValue());

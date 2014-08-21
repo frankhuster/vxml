@@ -3,14 +3,13 @@ package org.motechproject.vxml.service.impl;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.params.BasicHttpParams;
 import org.motechproject.vxml.CallInitiationException;
-import org.motechproject.vxml.domain.CallDirection;
-import org.motechproject.vxml.domain.CallStatus;
-import org.motechproject.vxml.domain.Config;
-import org.motechproject.vxml.domain.ConfigHelper;
+import org.motechproject.vxml.domain.*;
 import org.motechproject.vxml.repository.ConfigDataService;
 import org.motechproject.vxml.service.CallDetailRecordService;
 import org.motechproject.vxml.service.MotechStatusMessage;
@@ -53,10 +52,10 @@ public class OutboundCallServiceImpl implements OutboundCallService{
         Map<String, String> completeParams = new HashMap<>(params);
         completeParams.put("motechCallId", motechCallId);
 
-        HttpGet httpGet = generateGetRequest(config, completeParams);
+        HttpUriRequest request = generateHttpRequest(config, completeParams);
         HttpResponse response;
         try {
-            response = new DefaultHttpClient().execute(httpGet);
+            response = new DefaultHttpClient().execute(request);
         } catch (Exception e) {
             //todo: further refine that
             String message = String.format("Could not initiate call, unexpected exception: %s", e.toString());
@@ -77,14 +76,14 @@ public class OutboundCallServiceImpl implements OutboundCallService{
         }
 
         //todo: add extra parameters to CDR?
-        String from = config.outgoingCallUriParams.containsKey("from") ? config.outgoingCallUriParams.get("from") : params.containsKey("from") ? params.get("from") : "";
+        String from = config.outgoingCallParams.containsKey("from") ? config.outgoingCallParams.get("from") : params.containsKey("from") ? params.get("from") : "";
         String to = params.containsKey("to") ? params.get("to") : "";
         callDetailRecordService.logFromMotech(config.name, from, to, CallDirection.OUTBOUND, CallStatus.MOTECH_INITIATED,
                 motechCallId);
     }
 
-    private HttpGet generateGetRequest(Config config, Map<String, String> params) {
-        logger.info("generateGetRequest(config = {}, params = {})", config, params);
+    private HttpUriRequest generateHttpRequest(Config config, Map<String, String> params) {
+        logger.info("generateHttpRequest(config = {}, params = {})", config, params);
 
         String uri = ConfigHelper.outgoingCallUri(config);
         BasicHttpParams httpParams = new BasicHttpParams();
@@ -97,12 +96,18 @@ public class OutboundCallServiceImpl implements OutboundCallService{
             }
         }
 
-        HttpGet get = new HttpGet(uri);
-        get.setParams(httpParams);
+        HttpUriRequest request;
+        if (HttpMethod.GET == config.outgoingCallMethod) {
+            request = new HttpGet(uri);
+        }
+        else {
+            request = new HttpPost(uri);
+        }
+        request.setParams(httpParams);
 
-        logger.info("Generated {}", get);
+        logger.info("Generated {}", request.toString());
 
-        return get;
+        return request;
     }
 
 }

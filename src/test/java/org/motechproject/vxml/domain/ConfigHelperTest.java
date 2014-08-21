@@ -27,8 +27,7 @@ public class ConfigHelperTest {
         Map<String, String> outgoingCallUriParams = new HashMap<>();
         outgoingCallUriParams.put(TOKEN_KEY, TOKEN_VALUE);
 
-        config = new Config("Config", "ignore1, ignore2", OUTGOING_URI_TEMPLATE,
-                outgoingCallUriParams);
+        config = new Config("Config", "ignore1, ignore2", OUTGOING_URI_TEMPLATE, HttpMethod.GET, outgoingCallUriParams);
     }
 
     @Test

@@ -7,8 +7,8 @@ import org.junit.runner.RunWith;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.vxml.domain.CallDetailRecord;
-import org.motechproject.vxml.domain.CallStatus;
 import org.motechproject.vxml.domain.Config;
+import org.motechproject.vxml.domain.HttpMethod;
 import org.motechproject.vxml.repository.CallDetailRecordDataService;
 import org.motechproject.vxml.repository.ConfigDataService;
 import org.ops4j.pax.exam.ExamFactory;
@@ -31,6 +31,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Verify that the OutboundCallService is present & functional.
  */
+@SuppressWarnings("ALL")
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
@@ -61,7 +62,7 @@ public class OutboundCallServiceIT extends BasePaxIT {
 
         //Create a config
         Map<String, String> outgoingCallUriParams = new HashMap<>();
-        Config config = new Config("conf123", null, httpServerURI, outgoingCallUriParams);
+        Config config = new Config("conf123", null, httpServerURI, HttpMethod.GET, outgoingCallUriParams);
         logger.debug("verifyServiceFunctional - We create a config  {}", config.toString());
         configDataService.create(config);
 
@@ -82,7 +83,7 @@ public class OutboundCallServiceIT extends BasePaxIT {
 
         //Create a config
         Map<String, String> outgoingCallUriParams = new HashMap<>();
-        Config config = new Config("conf456", "", httpServerURI, outgoingCallUriParams);
+        Config config = new Config("conf456", "", httpServerURI, HttpMethod.GET, outgoingCallUriParams);
         logger.debug("shouldHandleInvalidServerResponse - We create a config  {}", config.toString());
         configDataService.create(config);
 

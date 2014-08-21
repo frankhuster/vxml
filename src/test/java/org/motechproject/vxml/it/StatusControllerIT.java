@@ -14,6 +14,7 @@ import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory
 import org.motechproject.vxml.domain.CallDetailRecord;
 import org.motechproject.vxml.domain.CallStatus;
 import org.motechproject.vxml.domain.Config;
+import org.motechproject.vxml.domain.HttpMethod;
 import org.motechproject.vxml.repository.CallDetailRecordDataService;
 import org.motechproject.vxml.repository.ConfigDataService;
 import org.ops4j.pax.exam.ExamFactory;
@@ -80,7 +81,7 @@ public class StatusControllerIT extends BasePaxIT {
 
         //Create a config
         Map<String, String> outgoingCallUriParams = new HashMap<>();
-        Config config = new Config("foo", "", "http://foo.com/bar", outgoingCallUriParams);
+        Config config = new Config("foo", "", "http://foo.com/bar", HttpMethod.GET, outgoingCallUriParams);
         configDataService.create(config);
 
         //Create & send a CDR status callback

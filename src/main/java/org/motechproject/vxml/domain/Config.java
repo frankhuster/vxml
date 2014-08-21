@@ -29,16 +29,21 @@ public class Config {
     /**
      * Template string used to issue an HTTP GET call to the IVR provider in order to initiate an outgoing (MT) call.
      * [xxx] placeholders are replaced with the values provided in the initiateCall() method.
-     * todo: better javadoc when that's actually in place
      */
     @Field
     public String outgoingCallUriTemplate;
 
     /**
-     * A map of parameters to be substituted to the outgoing URI template
+     * Which HTTP method should be used to trigger an outgoing call from the IVR provider
      */
     @Field
-    public Map<String, String> outgoingCallUriParams = new HashMap<>();
+    public HttpMethod outgoingCallMethod;
+
+    /**
+     * A map of parameters to be substituted in the outgoing URI template
+     */
+    @Field
+    public Map<String, String> outgoingCallParams = new HashMap<>();
 
 
     //todo: This constructor needed to avoid an MDS error when creating an entity using the MDS Data Browser UI...
@@ -46,11 +51,12 @@ public class Config {
     public Config() {  }
 
     public Config(String name, String ignoredStatusFields, String outgoingCallUriTemplate,
-                  Map<String, String> outgoingCallUriParams) {
+                  HttpMethod outgoingCallMethod, Map<String, String> outgoingCallParams) {
         this.name = name;
         this.ignoredStatusFields = ignoredStatusFields;
         this.outgoingCallUriTemplate = outgoingCallUriTemplate;
-        this.outgoingCallUriParams = outgoingCallUriParams;
+        this.outgoingCallMethod = outgoingCallMethod;
+        this.outgoingCallParams = outgoingCallParams;
     }
 
     @Override
@@ -68,7 +74,8 @@ public class Config {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (ignoredStatusFields != null ? ignoredStatusFields.hashCode() : 0);
         result = 31 * result + (outgoingCallUriTemplate != null ? outgoingCallUriTemplate.hashCode() : 0);
-        result = 31 * result + (outgoingCallUriParams != null ? outgoingCallUriParams.hashCode() : 0);
+        result = 31 * result + (outgoingCallMethod != null ? outgoingCallMethod.hashCode() : 0);
+        result = 31 * result + (outgoingCallParams != null ? outgoingCallParams.hashCode() : 0);
         return result;
     }
 
@@ -78,7 +85,8 @@ public class Config {
                 "name='" + name + '\'' +
                 ", ignoredStatusFields='" + ignoredStatusFields + '\'' +
                 ", outgoingCallUriTemplate='" + outgoingCallUriTemplate + '\'' +
-                ", outgoingCallUriParams='" + outgoingCallUriParams + '\'' +
+                ", outgoingCallMethod='" + outgoingCallMethod + '\'' +
+                ", outgoingCallParams='" + outgoingCallParams + '\'' +
                 '}';
     }
 }
