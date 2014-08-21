@@ -1,7 +1,7 @@
 package org.motechproject.vxml.it;
 
 /**
- * todo
+ * Utility Class that implements an extremely simple HTTP server that returns a predictable response at a given URI
  */
 
 import com.sun.net.httpserver.HttpExchange;

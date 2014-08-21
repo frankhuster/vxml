@@ -8,7 +8,7 @@ import org.motechproject.vxml.domain.CallDetailRecord;
 import java.util.List;
 
 /**
- * todo
+ * MDS generated CallDetailRecord database queries
  */
 public interface CallDetailRecordDataService extends MotechDataService<CallDetailRecord> {
     @Lookup

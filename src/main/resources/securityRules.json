@@ -11,14 +11,14 @@
         "origin": "SYSTEM_MODULE_VXML",
         "version": "0.25",
         "methodsRequired": [
-            "ANY"
+            "GET, POST"
         ]
     },
     {
         "active": true,
         "pattern": "/**/vxml/call/**",
         "supportedSchemes": [
-            "NO_SECURITY"
+            "USERNAME_PASSWORD"
         ],
         "protocol": "HTTP",
         "priority": 2,
@@ -26,7 +26,7 @@
         "origin": "SYSTEM_MODULE_VXML",
         "version": "0.25",
         "methodsRequired": [
-            "ANY"
+            "GET, POST"
         ]
     }
 ]

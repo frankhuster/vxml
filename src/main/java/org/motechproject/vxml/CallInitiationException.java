@@ -1,7 +1,7 @@
 package org.motechproject.vxml;
 
 /**
- * todo
+ * Thrown when an error occurs while trying to initiate an outgoing call
  */
 public class CallInitiationException extends RuntimeException {
     public CallInitiationException(String message) {

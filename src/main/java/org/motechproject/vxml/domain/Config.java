@@ -53,15 +53,15 @@ public class Config {
      * A map of parameters to be substituted in the outgoing URI template
      */
     @Field
-    private Map<String, String> statusMap = new HashMap<>();
+    private Map<String, String> statusFieldMap = new HashMap<>();
 
-    public Config(String name, List<String> ignoredStatusFields, Map<String, String> statusMap,
+    public Config(String name, List<String> ignoredStatusFields, Map<String, String> statusFieldMap,
                   HttpMethod outgoingCallMethod, String outgoingCallUriTemplate) {
         this.name = name;
         this.ignoredStatusFields = ignoredStatusFields;
         this.outgoingCallUriTemplate = outgoingCallUriTemplate;
         this.outgoingCallMethod = outgoingCallMethod;
-        this.statusMap = statusMap;
+        this.statusFieldMap = statusFieldMap;
     }
 
     public String getName() {
@@ -89,8 +89,8 @@ public class Config {
         return outgoingCallMethod;
     }
 
-    public Map<String, String> getStatusMap() {
-        return statusMap;
+    public Map<String, String> getStatusFieldMap() {
+        return statusFieldMap;
     }
 
     /**
@@ -104,7 +104,7 @@ public class Config {
      */
     public static Config getConfig(ConfigDataService configDataService, MotechStatusMessage motechStatusMessage,
                                    String configName) {
-        List<Config> configs = configDataService.findAllByName(configName);
+        List<Config> configs = configDataService.findByName(configName);
         if (null == configs || configs.size() < 1) {
             String msg = String.format("No matching config in the database for: %s", configName);
             logger.error(msg);
@@ -128,15 +128,15 @@ public class Config {
     /**
      * When pinging Motech back to provide call status, IVR providers sometimes send fields with different names than
      * those that are used by the system. For example the originating number is sometimes provided as 'callerid' whereas
-     * Motech uses the name 'from'. The statusMap config field contains such a mapping of field names. And
+     * Motech uses the name 'from'. The statusFieldMap config field contains such a mapping of field names. And
      * mapStatusField() returns that mapping or the original field name if no mapping exists.
      *
      * @param fieldName
      * @return
      */
     public String mapStatusField(String fieldName) {
-        if (null != statusMap && statusMap.containsKey(fieldName)) {
-            return statusMap.get(fieldName);
+        if (null != statusFieldMap && statusFieldMap.containsKey(fieldName)) {
+            return statusFieldMap.get(fieldName);
         }
         return fieldName;
     }
@@ -146,7 +146,7 @@ public class Config {
         if (this == o) return true;
         if (!(o instanceof Config)) return false;
 
-        //todo: I'm using a string compare because comparing the statusMap field (of type Map<String, CallStatus>) fails
+        //todo: I'm using a string compare because comparing the statusFieldMap field (of type Map<String, CallStatus>) fails
         //todo: change to a proper full fledged equals when https://applab.atlassian.net/browse/MOTECH-1186 is fixed
         return this.toString().equals(o.toString());
     }
@@ -157,7 +157,7 @@ public class Config {
         result = 31 * result + (ignoredStatusFields != null ? ignoredStatusFields.hashCode() : 0);
         result = 31 * result + (outgoingCallUriTemplate != null ? outgoingCallUriTemplate.hashCode() : 0);
         result = 31 * result + (outgoingCallMethod != null ? outgoingCallMethod.hashCode() : 0);
-        result = 31 * result + (statusMap != null ? statusMap.hashCode() : 0);
+        result = 31 * result + (statusFieldMap != null ? statusFieldMap.hashCode() : 0);
         return result;
     }
 
@@ -168,7 +168,7 @@ public class Config {
                 ", ignoredStatusFields='" + ignoredStatusFields + '\'' +
                 ", outgoingCallUriTemplate='" + outgoingCallUriTemplate + '\'' +
                 ", outgoingCallMethod='" + outgoingCallMethod + '\'' +
-                ", statusMap='" + statusMap + '\'' +
+                ", statusFieldMap='" + statusFieldMap + '\'' +
                 '}';
     }
 }

@@ -11,7 +11,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 
 /**
- * todo
+ * EventParams Unit Tests
  */
 public class EventParamsTest {
     @Test

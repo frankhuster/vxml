@@ -1,9 +1,7 @@
 package org.motechproject.vxml.service.impl;
 
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import org.motechproject.vxml.TimestampHelper;
 import org.motechproject.vxml.domain.CallDetailRecord;
 import org.motechproject.vxml.domain.CallDirection;
 import org.motechproject.vxml.domain.CallStatus;
@@ -24,30 +22,24 @@ public class CallDetailRecordServiceImpl implements CallDetailRecordService {
 
     @Autowired
     private CallDetailRecordDataService callDetailRecordDataService;
-    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSSS");
 
-
-    public String currentTime() {
-        return dateTimeFormatter.print(DateTime.now());
-    }
 
     @Override
     public void logFromProvider(String config, String from, String to, CallDirection callDirection,
                                 CallStatus callStatus, String motechCallId, String providerCallId,
                                 Map<String, String> providerExtraData) {
-        List<CallDetailRecord> callDetailRecords = callDetailRecords = callDetailRecordDataService.findByProviderCallId(
-                providerCallId);
+        List<CallDetailRecord> callDetailRecords = callDetailRecordDataService.findByProviderCallId(providerCallId);
         if (callDetailRecords.size() > 0 && StringUtils.isNotBlank(callDetailRecords.get(0).getMotechCallId())) {
             motechCallId = callDetailRecords.get(0).getMotechCallId();
         }
-        callDetailRecordDataService.create(new CallDetailRecord(currentTime(), config, from, to, callDirection,
-                callStatus, motechCallId, providerCallId, providerExtraData));
+        callDetailRecordDataService.create(new CallDetailRecord(TimestampHelper.currentTime(), config, from, to,
+                callDirection, callStatus, motechCallId, providerCallId, providerExtraData));
     }
 
     @Override
     public void logFromMotech(String config, String from, String to, CallDirection callDirection, CallStatus callStatus,
                               String motechId) {
-        callDetailRecordDataService.create(new CallDetailRecord(currentTime(), config, from, to, callDirection,
-                callStatus, motechId, null, null));
+        callDetailRecordDataService.create(new CallDetailRecord(TimestampHelper.currentTime(), config, from, to,
+                callDirection, callStatus, motechId, null, null));
     }
 }

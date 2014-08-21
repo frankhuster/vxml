@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 /**
- * todo
+ * Responds to HTTP queries to {motech-server}/module/vxml/call/{config} by initiating an outbound IVR call
  */
 @Controller
 @RequestMapping(value = "/call")
@@ -36,12 +36,6 @@ public class CallController {
     @RequestMapping(value = "/{configName}")
     public void handle(@PathVariable String configName, @RequestParam Map<String, String> params,
                        @RequestHeader Map<String, String> headers) {
-
-        //todo *********************************************************************************************************
-        //todo
-        //todo: remember to change the supportedThemes entry to USERNAME_PASSWORD in securityRules.json after debugging
-        //todo
-        //todo *********************************************************************************************************
 
         logger.debug(String.format("handle(configName = %s, params = %s, headers = %s)", configName, params, headers));
 

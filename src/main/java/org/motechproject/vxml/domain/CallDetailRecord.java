@@ -11,7 +11,6 @@ import java.util.Map;
 @Entity
 public class CallDetailRecord {
 
-    //todo: see if we can get that from MDS
     private static final int MAX_ENTITY_STRING_LENGTH = 255;
 
     private static Logger logger = LoggerFactory.getLogger(CallDetailRecord.class);

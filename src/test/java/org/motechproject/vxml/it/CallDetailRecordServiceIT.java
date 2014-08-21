@@ -96,6 +96,4 @@ public class CallDetailRecordServiceIT extends BasePaxIT {
         logger.info("found call details record(s) with providerCallId {}: {}", providerCallId,
                 callDetailRecords.toString());
     }
-
-    //todo: test 'ignored' fields
 }

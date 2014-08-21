@@ -8,9 +8,7 @@ import java.util.Map;
 public interface OutboundCallService {
     /**
      * Constructs & executes an HTTP GET request, replacing [xxx] placeholders in the outgoingCallUrl string with their
-     * provided values and adding the unmatched params to the request.
-     *
-     * todo: provide an example
+     * provided values from params and adding the unmatched params to the request.
      *
      * @param configName
      * @param params

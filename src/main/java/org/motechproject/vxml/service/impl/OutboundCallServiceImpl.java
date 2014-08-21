@@ -8,7 +8,12 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.params.BasicHttpParams;
+import org.motechproject.event.MotechEvent;
+import org.motechproject.event.listener.EventRelay;
 import org.motechproject.vxml.CallInitiationException;
+import org.motechproject.vxml.EventParams;
+import org.motechproject.vxml.EventSubjects;
+import org.motechproject.vxml.TimestampHelper;
 import org.motechproject.vxml.domain.*;
 import org.motechproject.vxml.repository.ConfigDataService;
 import org.motechproject.vxml.service.CallDetailRecordService;
@@ -24,7 +29,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * TODO
+ * Generates & sends an HTTP request to an IVR provider to trigger an outbound call
  */
 @Service("outboundCallService")
 public class OutboundCallServiceImpl implements OutboundCallService{
@@ -33,13 +38,15 @@ public class OutboundCallServiceImpl implements OutboundCallService{
     private ConfigDataService configDataService;
     private MotechStatusMessage motechStatusMessage;
     private CallDetailRecordService callDetailRecordService;
+    private EventRelay eventRelay;
 
     @Autowired
     public OutboundCallServiceImpl(ConfigDataService configDataService, MotechStatusMessage motechStatusMessage,
-                                   CallDetailRecordService callDetailRecordService) {
+                                   CallDetailRecordService callDetailRecordService, EventRelay eventRelay) {
         this.configDataService = configDataService;
         this.motechStatusMessage = motechStatusMessage;
         this.callDetailRecordService = callDetailRecordService;
+        this.eventRelay = eventRelay;
     }
 
     @Override
@@ -57,17 +64,15 @@ public class OutboundCallServiceImpl implements OutboundCallService{
         try {
             response = new DefaultHttpClient().execute(request);
         } catch (Exception e) {
-            //todo: further refine that
             String message = String.format("Could not initiate call, unexpected exception: %s", e.toString());
             logger.info(message);
             motechStatusMessage.alert(message);
             throw new CallInitiationException(message);
         }
         StatusLine statusLine = response.getStatusLine();
-        //todo: verify
-        logger.info("HTTP Status: {}" + statusLine.toString());
 
-        //todo: for now assume 200 is good enough, obviously temporary
+        //todo: it's possible that some IVR providers return an HTTP 200 and an error code in the response body.
+        //todo: If we encounter such a provider, we'll have to beef up the response processing here
         if (statusLine.getStatusCode() != HttpStatus.SC_OK) {
             String message = String.format("Could not initiate call: %s", statusLine.toString());
             logger.info(message);
@@ -75,12 +80,22 @@ public class OutboundCallServiceImpl implements OutboundCallService{
             throw new CallInitiationException(message);
         }
 
-        //todo: add extra parameters to CDR?
-        String from = config.getStatusMap().containsKey("from") ? config.getStatusMap().get("from") :
-                params.containsKey("from") ? params.get("from") : "";
+        // Add a CDR to the database
+        String from = params.containsKey("from") ? params.get("from") : "";
         String to = params.containsKey("to") ? params.get("to") : "";
         callDetailRecordService.logFromMotech(config.getName(), from, to, CallDirection.OUTBOUND,
                 CallStatus.MOTECH_INITIATED, motechCallId);
+
+        // Generate a MOTECH event
+        Map<String, Object> eventParams = new HashMap<>();
+        eventParams.put(EventParams.TIMESTAMP, TimestampHelper.currentTime());
+        eventParams.put(EventParams.CONFIG, config.getName());
+        eventParams.put(EventParams.TO, from);
+        eventParams.put(EventParams.PROVIDER_EXTRA_DATA, params);
+        MotechEvent event = new MotechEvent(EventSubjects.CALL_INITIATED, eventParams);
+        logger.debug("Sending MotechEvent {}", event.toString());
+        eventRelay.sendEventMessage(event);
+
     }
 
     private HttpUriRequest generateHttpRequest(Config config, Map<String, String> params) {

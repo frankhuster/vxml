@@ -8,12 +8,9 @@ import org.motechproject.vxml.domain.Config;
 import java.util.List;
 
 /**
- * todo
+ * MDS generated ConfigDataService database queries
  */
 public interface ConfigDataService extends MotechDataService<Config> {
     @Lookup
-    List<Config> findAllByName(@LookupField(name = "name") String name);
-
-    @Lookup
-    Config findOneByName(@LookupField(name = "name") String name);
+    List<Config> findByName(@LookupField(name = "name") String name);
 }

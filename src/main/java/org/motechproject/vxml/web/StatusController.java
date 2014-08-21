@@ -4,6 +4,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.vxml.EventParams;
 import org.motechproject.vxml.EventSubjects;
+import org.motechproject.vxml.TimestampHelper;
 import org.motechproject.vxml.domain.CallDetailRecord;
 import org.motechproject.vxml.domain.Config;
 import org.motechproject.vxml.repository.CallDetailRecordDataService;
@@ -15,12 +16,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Map;
 
 /**
- * todo
+ * Responds to HTTP queries to {motech-server}/module/vxml/status/{configName} by creating a CallDetailRecord entry in
+ * the database and posting a corresponding Motech event on the queue.
  */
 @Controller
 @RequestMapping(value = "/status")
@@ -77,7 +84,7 @@ public class StatusController {
         
         // Use current time if the provider didn't provide a timestamp
         if (null == callDetailRecord.getTimestamp()) {
-            callDetailRecord.setTimestamp(callDetailRecordService.currentTime());
+            callDetailRecord.setTimestamp(TimestampHelper.currentTime());
         }
 
         // Generate a MOTECH event

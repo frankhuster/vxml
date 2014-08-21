@@ -26,10 +26,10 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.jdo.JDOException;
 import java.net.URI;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Verify StatusController present & functional.
@@ -76,18 +76,23 @@ public class StatusControllerIT extends BasePaxIT {
         logger.info("verifyControllerFunctional");
 
         //Create a config
-        Config config = new Config("foo", null, null, null, null);
+        List<String> ignoredStatusFields = new ArrayList<>(Arrays.asList("ignoreme", "ignoreme2"));
+        Map<String, String> statusMap = new HashMap<>();
+        statusMap.put("FROM", "from");
+
+        Config config = new Config("foo", ignoredStatusFields, statusMap, null, null);
         configDataService.create(config);
 
         //Create & send a CDR status callback
         String motechCallId = UUID.randomUUID().toString();
         URIBuilder builder = new URIBuilder();
         builder.setScheme("http").setHost("localhost").setPort(TestContext.getJettyPort()).setPath("/vxml/status/foo")
-                .addParameter("from", "+12065551212")
+                .addParameter("FROM", "+12065551212")
                 .addParameter("to", "+12066661212")
                 .addParameter("callStatus", "ANSWERED")
                 .addParameter("motechCallId", motechCallId)
-                .addParameter("providerCallId", "123456")
+                .addParameter("ignoreme", "xxx")
+                .addParameter("ignoreme2", "xxx")
                 .addParameter("foo", "bar");
         URI uri = builder.build();
         HttpGet httpGet = new HttpGet(uri);
@@ -98,6 +103,10 @@ public class StatusControllerIT extends BasePaxIT {
         List<CallDetailRecord> callDetailRecords = callDetailRecordDataService.findByMotechCallId(motechCallId);
         assertEquals(1, callDetailRecords.size());
         CallDetailRecord callDetailRecord = callDetailRecords.get(0);
+        assertEquals("+12065551212", callDetailRecord.getFrom());
+        assertEquals("+12066661212", callDetailRecord.getTo());
+        assertFalse(callDetailRecord.getProviderExtraData().containsKey("ignoreme"));
+        assertFalse(callDetailRecord.getProviderExtraData().containsKey("ignoreme2"));
         assertEquals(CallStatus.ANSWERED, callDetailRecord.getCallStatus());
         assertEquals(1, callDetailRecord.getProviderExtraData().keySet().size());
         assertEquals(callDetailRecord.getProviderExtraData().get("foo"), "bar");
