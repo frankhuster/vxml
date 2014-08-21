@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * todo
+ * IVR provider configuration, represents how the VXML module interacts with an IVR provider
  */
 @Entity
 public class Config {
@@ -44,11 +44,6 @@ public class Config {
      */
     @Field
     public Map<String, String> outgoingCallParams = new HashMap<>();
-
-
-    //todo: This constructor needed to avoid an MDS error when creating an entity using the MDS Data Browser UI...
-    //todo: Remove when https://applab.atlassian.net/browse/MOTECH-1202 is fixed
-    public Config() {  }
 
     public Config(String name, String ignoredStatusFields, String outgoingCallUriTemplate,
                   HttpMethod outgoingCallMethod, Map<String, String> outgoingCallParams) {
