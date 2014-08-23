@@ -11,6 +11,7 @@ import org.motechproject.vxml.domain.Config;
 import org.motechproject.vxml.domain.HttpMethod;
 import org.motechproject.vxml.repository.CallDetailRecordDataService;
 import org.motechproject.vxml.repository.ConfigDataService;
+import org.motechproject.vxml.utils.SimpleHttpServer;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;

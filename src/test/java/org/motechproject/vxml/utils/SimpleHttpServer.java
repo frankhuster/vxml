@@ -1,4 +1,4 @@
-package org.motechproject.vxml.it;
+package org.motechproject.vxml.utils;
 
 /**
  * Utility Class that implements an extremely simple HTTP server that returns a predictable response at a given URI

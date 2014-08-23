@@ -1,11 +1,8 @@
 package org.motechproject.vxml.it;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +14,7 @@ import org.motechproject.vxml.domain.CallStatus;
 import org.motechproject.vxml.domain.Config;
 import org.motechproject.vxml.repository.CallDetailRecordDataService;
 import org.motechproject.vxml.repository.ConfigDataService;
+import org.motechproject.vxml.utils.SimpleHttpClient;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
@@ -26,13 +24,10 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.jdo.JDOException;
-import java.io.IOException;
 import java.net.URI;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Verify StatusController present & functional.
@@ -56,26 +51,6 @@ public class StatusControllerIT extends BasePaxIT {
         try { callDetailRecordDataService.deleteAll(); } catch (JDOException e) { }
     }
 
-    private boolean execHttpRequest(HttpUriRequest request, int expectedStatus) throws InterruptedException,
-            IOException {
-        int tries = 0;
-        do {
-            tries++;
-            HttpResponse response = new DefaultHttpClient().execute(request);
-            if (expectedStatus == response.getStatusLine().getStatusCode()) {
-                logger.debug(String.format("Successfully received HTTP %d in %d %s", expectedStatus, tries,
-                        tries == 1 ? "try" : "tries"));
-                return true;
-            }
-            logger.debug("Was expecting HTTP {} but received {}, trying again in 5s", expectedStatus,
-                    response.getStatusLine().getStatusCode());
-            Thread.sleep(5000);
-        } while (tries < NUM_TRIES);
-
-        logger.debug("Giving up trying to receive HTTP {} after {} tries", expectedStatus, NUM_TRIES);
-        return false;
-    }
-
     @Test
     public void shouldNotLogWhenPassedInvalidConfig() throws Exception {
         logger.info("shouldNotLogWhenPassedIvalidConfig");
@@ -87,7 +62,7 @@ public class StatusControllerIT extends BasePaxIT {
                 .setPath("/vxml/status/fubar");
         URI uri = builder.build();
         HttpGet httpGet = new HttpGet(uri);
-        assertTrue(execHttpRequest(httpGet, HttpStatus.SC_INTERNAL_SERVER_ERROR));
+        assertTrue(SimpleHttpClient.execHttpRequest(httpGet, HttpStatus.SC_INTERNAL_SERVER_ERROR));
 
         //Verify we did not log this CDR because service contains an invalid config
         List<CallDetailRecord> callDetailRecords = callDetailRecordDataService.retrieveAll();
@@ -119,7 +94,7 @@ public class StatusControllerIT extends BasePaxIT {
                 .addParameter("foo", "bar");
         URI uri = builder.build();
         HttpGet httpGet = new HttpGet(uri);
-        assertTrue(execHttpRequest(httpGet, HttpStatus.SC_OK));
+        assertTrue(SimpleHttpClient.execHttpRequest(httpGet, HttpStatus.SC_OK));
 
         //Verify we logged this CDR - by querying on its motechId - which is a GUID
         List<CallDetailRecord> callDetailRecords = callDetailRecordDataService.findByMotechCallId(motechCallId);
