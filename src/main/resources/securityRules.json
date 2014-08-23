@@ -11,7 +11,8 @@
         "origin": "SYSTEM_MODULE_VXML",
         "version": "0.25",
         "methodsRequired": [
-            "GET, POST"
+            "GET",
+            "POST"
         ]
     },
     {
@@ -26,7 +27,8 @@
         "origin": "SYSTEM_MODULE_VXML",
         "version": "0.25",
         "methodsRequired": [
-            "GET, POST"
+            "GET",
+            "POST"
         ]
     }
 ]
