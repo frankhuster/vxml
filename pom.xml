@@ -8,7 +8,7 @@
     <artifactId>vxml</artifactId>
     <version>0.25-SNAPSHOT</version>
     <packaging>bundle</packaging>
-    <name>VXML</name>
+    <name>VXML-CCXML</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
