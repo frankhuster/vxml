@@ -31,15 +31,7 @@ public class SimpleHttpServer {
     private static Logger logger = LoggerFactory.getLogger(SimpleHttpServer.class);
     private static SimpleHttpServer simpleHttpServer = new SimpleHttpServer();
 
-    private SimpleHttpServer() {
-        try {
-            logger.debug("Sleeping 15s");
-            Thread.sleep(15000);
-        }
-        catch (InterruptedException e) {
-            logger.debug("Sleep interrupted");
-        }
-    }
+    private SimpleHttpServer() {  }
 
     public static SimpleHttpServer getInstance() {
         return simpleHttpServer;
