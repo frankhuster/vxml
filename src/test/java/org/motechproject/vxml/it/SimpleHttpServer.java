@@ -26,31 +26,24 @@ public class SimpleHttpServer {
     private static final int MIN_PORT = 8080;
     private static final int MAX_PORT = 9080;
 
-    private class SimpleHttpHandler implements HttpHandler {
-        private Logger logger = LoggerFactory.getLogger(SimpleHttpHandler.class);
-        private int responseCode;
-        private String responseBody;
+    private int port = MIN_PORT;
+    private Set<HttpServer> servers = new HashSet<>();
+    private static Logger logger = LoggerFactory.getLogger(SimpleHttpServer.class);
+    private static SimpleHttpServer simpleHttpServer = new SimpleHttpServer();
 
-        public SimpleHttpHandler(int responseCode, String responseBody) {
-            //logger.debug("********** SimpleHttpHandler(responseCode={}, responseBody={})", responseCode, responseBody);
-            this.responseCode = responseCode;
-            this.responseBody = responseBody;
+    private SimpleHttpServer() {
+        try {
+            logger.debug("Sleeping 5s");
+            Thread.sleep(5000);
         }
-
-        @Override
-        public void handle(HttpExchange httpExchange) throws IOException {
-            //logger.debug("handle(httpExchange={})", httpExchange);
-            //logger.debug("responseCode=%d, responseBody='%s'", responseCode, responseBody);
-            httpExchange.sendResponseHeaders(responseCode, responseBody.length());
-            OutputStream os = httpExchange.getResponseBody();
-            os.write(responseBody.getBytes());
-            os.close();
+        catch (InterruptedException e) {
+            logger.debug("Sleep interrupted");
         }
     }
 
-    private int port = MIN_PORT;
-    private Set<HttpServer> servers = new HashSet<>();
-    private Logger logger = LoggerFactory.getLogger(SimpleHttpServer.class);
+    public static SimpleHttpServer getInstance() {
+        return simpleHttpServer;
+    }
 
     public String start(String resource, int responseCode, String responseBody) {
         //logger.debug(String.format("********** start(resource='%s', responseCode=%d, responseBody='%s')", resource, responseCode, responseBody));
@@ -86,5 +79,27 @@ public class SimpleHttpServer {
         }
 
         throw new RuntimeException("Unable to find an open port");
+    }
+
+    private class SimpleHttpHandler implements HttpHandler {
+        private Logger logger = LoggerFactory.getLogger(SimpleHttpHandler.class);
+        private int responseCode;
+        private String responseBody;
+
+        public SimpleHttpHandler(int responseCode, String responseBody) {
+            //logger.debug("********** SimpleHttpHandler(responseCode={}, responseBody={})", responseCode, responseBody);
+            this.responseCode = responseCode;
+            this.responseBody = responseBody;
+        }
+
+        @Override
+        public void handle(HttpExchange httpExchange) throws IOException {
+            //logger.debug("handle(httpExchange={})", httpExchange);
+            //logger.debug("responseCode=%d, responseBody='%s'", responseCode, responseBody);
+            httpExchange.sendResponseHeaders(responseCode, responseBody.length());
+            OutputStream os = httpExchange.getResponseBody();
+            os.write(responseBody.getBytes());
+            os.close();
+        }
     }
 }

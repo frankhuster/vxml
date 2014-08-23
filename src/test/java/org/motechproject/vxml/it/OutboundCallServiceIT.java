@@ -57,7 +57,7 @@ public class OutboundCallServiceIT extends BasePaxIT {
     public void verifyServiceFunctional() {
         logger.info("verifyServiceFunctional()");
 
-        String httpServerURI = new SimpleHttpServer().start("foo", HttpStatus.SC_OK, "OK");
+        String httpServerURI = SimpleHttpServer.getInstance().start("foo", HttpStatus.SC_OK, "OK");
         logger.debug("verifyServiceFunctional - We have a server listening at {}", httpServerURI);
 
         //Create a config
@@ -77,7 +77,7 @@ public class OutboundCallServiceIT extends BasePaxIT {
     public void shouldHandleInvalidServerResponse() {
         logger.info("shouldHandleInvalidServerResponse()");
 
-        String httpServerURI = new SimpleHttpServer().start("bar", HttpStatus.SC_BAD_REQUEST, "Eeek!");
+        String httpServerURI = SimpleHttpServer.getInstance().start("bar", HttpStatus.SC_BAD_REQUEST, "Eeek!");
         logger.debug("shouldHandleInvalidServerResponse - We have a server listening at {}", httpServerURI);
 
         //Create a config
