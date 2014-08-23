@@ -33,8 +33,8 @@ public class SimpleHttpServer {
 
     private SimpleHttpServer() {
         try {
-            logger.debug("Sleeping 5s");
-            Thread.sleep(5000);
+            logger.debug("Sleeping 15s");
+            Thread.sleep(15000);
         }
         catch (InterruptedException e) {
             logger.debug("Sleep interrupted");
