@@ -53,10 +53,22 @@ public class OutboundCallServiceImpl implements OutboundCallService {
         this.eventRelay = eventRelay;
     }
 
-    @Override
-    public void initiateCall(String configName, Map<String, String> params) {
-        logger.info("initiateCall(configName = {}, params = {})", configName, params);
+    private void addCallDetailRecord(CallStatus callStatus, Config config, Map<String, String> params,
+                                     String motechCallId) {
+        logger.debug(String.format("addCallDetailRecord(config = %s, params = %s, motechCallId = %s)", config.getName(),
+                params.toString(), motechCallId));
 
+        String from = params.containsKey("from") ? params.get("from") : null;
+        String to = params.containsKey("to") ? params.get("to") : null;
+        callDetailRecordDataService.create(new CallDetailRecord(TimestampHelper.currentTime(), config.getName(), from,
+                to, CallDirection.OUTBOUND, callStatus, motechCallId, null, params));
+    }
+
+    @Override
+    public void initiateCall(String configName, Map<String, String> parameters) {
+        logger.debug("initiateCall(configName = {}, params = {})", configName, parameters);
+
+        Map<String, String> params = new HashMap<>(parameters);
         Config config = Config.getConfig(configDataService, motechStatusMessage, configName);
 
         String motechCallId = UUID.randomUUID().toString();
@@ -71,6 +83,8 @@ public class OutboundCallServiceImpl implements OutboundCallService {
             String message = String.format("Could not initiate call, unexpected exception: %s", e.toString());
             logger.info(message);
             motechStatusMessage.alert(message);
+            params.put("ErrorMessage", message);
+            addCallDetailRecord(CallStatus.FAILED, config, params, motechCallId);
             throw new CallInitiationException(message, e);
         }
         StatusLine statusLine = response.getStatusLine();
@@ -81,29 +95,35 @@ public class OutboundCallServiceImpl implements OutboundCallService {
             String message = String.format("Could not initiate call: %s", statusLine.toString());
             logger.info(message);
             motechStatusMessage.alert(message);
+            params.put("ErrorMessage", message);
+            addCallDetailRecord(CallStatus.FAILED, config, params, motechCallId);
             throw new CallInitiationException(message);
         }
 
         // Add a CDR to the database
-        String from = params.containsKey("from") ? params.get("from") : null;
-        String to = params.containsKey("to") ? params.get("to") : null;
-        callDetailRecordDataService.create(new CallDetailRecord(TimestampHelper.currentTime(), config.getName(), from,
-                to, CallDirection.OUTBOUND, CallStatus.MOTECH_INITIATED, motechCallId, null, null));
+        addCallDetailRecord(CallStatus.MOTECH_INITIATED, config, params, motechCallId);
 
         // Generate a MOTECH event
         Map<String, Object> eventParams = new HashMap<>();
-        eventParams.put(EventParams.TIMESTAMP, TimestampHelper.currentTime());
         eventParams.put(EventParams.CONFIG, config.getName());
-        eventParams.put(EventParams.TO, from);
-        eventParams.put(EventParams.PROVIDER_EXTRA_DATA, params);
+        if (params.containsKey("timestamp")) {
+            eventParams.put(EventParams.TIMESTAMP, params.get("timestamp"));
+        } else {
+            eventParams.put(EventParams.TIMESTAMP, TimestampHelper.currentTime());
+        }
+        if (params.containsKey("to")) {
+            eventParams.put(EventParams.TO, params.get("to"));
+        }
+        if (params.entrySet().size() > 0) {
+            eventParams.put(EventParams.PROVIDER_EXTRA_DATA, params);
+        }
         MotechEvent event = new MotechEvent(EventSubjects.CALL_INITIATED, eventParams);
         logger.debug("Sending MotechEvent {}", event.toString());
         eventRelay.sendEventMessage(event);
-
     }
 
     private HttpUriRequest generateHttpRequest(Config config, Map<String, String> params) {
-        logger.info("generateHttpRequest(config = {}, params = {})", config, params);
+        logger.debug("generateHttpRequest(config = {}, params = {})", config, params);
 
         String uri = config.getOutgoingCallUriTemplate();
         BasicHttpParams httpParams = new BasicHttpParams();
@@ -124,7 +144,7 @@ public class OutboundCallServiceImpl implements OutboundCallService {
         }
         request.setParams(httpParams);
 
-        logger.info("Generated {}", request.toString());
+        logger.debug("Generated {}", request.toString());
 
         return request;
     }
