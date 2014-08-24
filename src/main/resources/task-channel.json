@@ -84,7 +84,8 @@
                 {
                     "key" : "params",
                     "type" : "MAP",
-                    "displayName" : "vxml_task_params"
+                    "displayName" : "vxml_task_params",
+                    "required": false
                 }
             ]
         }
