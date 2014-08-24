@@ -22,7 +22,6 @@
         </constructor-arg>
     </bean>
 
-    <osgi:service ref="callRecordService" interface="org.motechproject.vxml.service.CallDetailRecordService" />
     <osgi:service ref="outboundCallService" interface="org.motechproject.vxml.service.OutboundCallService" />
 
     <osgi:reference id="callRecordDataService" interface="org.motechproject.vxml.repository.CallDetailRecordDataService" />

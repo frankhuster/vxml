@@ -3,10 +3,10 @@ package org.motechproject.vxml.service.impl;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.params.BasicHttpParams;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
@@ -14,9 +14,13 @@ import org.motechproject.vxml.CallInitiationException;
 import org.motechproject.vxml.EventParams;
 import org.motechproject.vxml.EventSubjects;
 import org.motechproject.vxml.TimestampHelper;
-import org.motechproject.vxml.domain.*;
+import org.motechproject.vxml.domain.CallDetailRecord;
+import org.motechproject.vxml.domain.CallDirection;
+import org.motechproject.vxml.domain.CallStatus;
+import org.motechproject.vxml.domain.Config;
+import org.motechproject.vxml.domain.HttpMethod;
+import org.motechproject.vxml.repository.CallDetailRecordDataService;
 import org.motechproject.vxml.repository.ConfigDataService;
-import org.motechproject.vxml.service.CallDetailRecordService;
 import org.motechproject.vxml.service.MotechStatusMessage;
 import org.motechproject.vxml.service.OutboundCallService;
 import org.slf4j.Logger;
@@ -32,20 +36,20 @@ import java.util.UUID;
  * Generates & sends an HTTP request to an IVR provider to trigger an outbound call
  */
 @Service("outboundCallService")
-public class OutboundCallServiceImpl implements OutboundCallService{
+public class OutboundCallServiceImpl implements OutboundCallService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private ConfigDataService configDataService;
     private MotechStatusMessage motechStatusMessage;
-    private CallDetailRecordService callDetailRecordService;
+    private CallDetailRecordDataService callDetailRecordDataService;
     private EventRelay eventRelay;
 
     @Autowired
     public OutboundCallServiceImpl(ConfigDataService configDataService, MotechStatusMessage motechStatusMessage,
-                                   CallDetailRecordService callDetailRecordService, EventRelay eventRelay) {
+                                   CallDetailRecordDataService callDetailRecordDataService, EventRelay eventRelay) {
         this.configDataService = configDataService;
         this.motechStatusMessage = motechStatusMessage;
-        this.callDetailRecordService = callDetailRecordService;
+        this.callDetailRecordDataService = callDetailRecordDataService;
         this.eventRelay = eventRelay;
     }
 
@@ -67,7 +71,7 @@ public class OutboundCallServiceImpl implements OutboundCallService{
             String message = String.format("Could not initiate call, unexpected exception: %s", e.toString());
             logger.info(message);
             motechStatusMessage.alert(message);
-            throw new CallInitiationException(message);
+            throw new CallInitiationException(message, e);
         }
         StatusLine statusLine = response.getStatusLine();
 
@@ -81,10 +85,10 @@ public class OutboundCallServiceImpl implements OutboundCallService{
         }
 
         // Add a CDR to the database
-        String from = params.containsKey("from") ? params.get("from") : "";
-        String to = params.containsKey("to") ? params.get("to") : "";
-        callDetailRecordService.logFromMotech(config.getName(), from, to, CallDirection.OUTBOUND,
-                CallStatus.MOTECH_INITIATED, motechCallId);
+        String from = params.containsKey("from") ? params.get("from") : null;
+        String to = params.containsKey("to") ? params.get("to") : null;
+        callDetailRecordDataService.create(new CallDetailRecord(TimestampHelper.currentTime(), config.getName(), from,
+                to, CallDirection.OUTBOUND, CallStatus.MOTECH_INITIATED, motechCallId, null, null));
 
         // Generate a MOTECH event
         Map<String, Object> eventParams = new HashMap<>();
@@ -115,8 +119,7 @@ public class OutboundCallServiceImpl implements OutboundCallService{
         HttpUriRequest request;
         if (HttpMethod.GET == config.getOutgoingCallMethod()) {
             request = new HttpGet(uri);
-        }
-        else {
+        } else {
             request = new HttpPost(uri);
         }
         request.setParams(httpParams);

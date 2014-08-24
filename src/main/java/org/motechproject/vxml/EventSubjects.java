@@ -8,4 +8,5 @@ public final class EventSubjects {
     private EventSubjects() { }
     public static final String CALL_STATUS = "vxml_call_status";
     public static final String CALL_INITIATED = "vxml_call_initiated";
+    public static final String INITIATE_CALL = "vxml_initiate_call";
 }

@@ -20,6 +20,8 @@ import java.util.Map;
 public class Config {
 
     private static Logger logger = LoggerFactory.getLogger(Config.class);
+    // See http://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
+    private static final int MAX_URL_SIZE = 2000;
 
     /**
      * How a config is identified
@@ -40,7 +42,7 @@ public class Config {
      * [xxx] placeholders are replaced with the values provided in the initiateCall() method.
      */
     @Field
-    @Column(length = 5*1024)
+    @Column(length = MAX_URL_SIZE)
     private String outgoingCallUriTemplate;
 
     /**
@@ -143,8 +145,12 @@ public class Config {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Config)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Config)) {
+            return false;
+        }
 
         //todo: I'm using a string compare because comparing the statusFieldMap field (of type Map<String, CallStatus>) fails
         //todo: change to a proper full fledged equals when https://applab.atlassian.net/browse/MOTECH-1186 is fixed

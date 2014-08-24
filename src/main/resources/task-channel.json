@@ -82,17 +82,9 @@
                     "displayName" : "vxml_task_config"
                 },
                 {
-                    "key" : "to",
-                    "displayName" : "vxml_task_to"
-                },
-                {
-                    "key" : "motech_call_id",
-                    "displayName" : "vxml_task_motech_call_id"
-                },
-                {
-                    "key" : "provider_extra_data",
+                    "key" : "params",
                     "type" : "MAP",
-                    "displayName" : "vxml_task_provider_extra_data"
+                    "displayName" : "vxml_task_params"
                 }
             ]
         }

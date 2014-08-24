@@ -9,7 +9,6 @@ import org.motechproject.vxml.domain.CallDetailRecord;
 import org.motechproject.vxml.domain.Config;
 import org.motechproject.vxml.repository.CallDetailRecordDataService;
 import org.motechproject.vxml.repository.ConfigDataService;
-import org.motechproject.vxml.service.CallDetailRecordService;
 import org.motechproject.vxml.service.MotechStatusMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,17 +33,14 @@ import java.util.Map;
 public class StatusController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    private CallDetailRecordService callDetailRecordService;
     private CallDetailRecordDataService callDetailRecordDataService;
     private ConfigDataService configDataService;
     private MotechStatusMessage motechStatusMessage;
     private EventRelay eventRelay;
 
     @Autowired
-    public StatusController(CallDetailRecordService callDetailRecordService,
-                            CallDetailRecordDataService callDetailRecordDataService, EventRelay eventRelay,
+    public StatusController(CallDetailRecordDataService callDetailRecordDataService, EventRelay eventRelay,
                             ConfigDataService configDataService, MotechStatusMessage motechStatusMessage) {
-        this.callDetailRecordService = callDetailRecordService;
         this.callDetailRecordDataService = callDetailRecordDataService;
         this.eventRelay = eventRelay;
         this.configDataService = configDataService;
@@ -76,8 +72,7 @@ public class StatusController {
         for (Map.Entry<String, String> entry : params.entrySet()) {
             if (config.shouldIgnoreField(entry.getKey())) {
                 logger.debug("Ignoring provider field '{}' with value '{}'", entry.getKey(), entry.getValue());
-            }
-            else {
+            } else {
                 callDetailRecord.setField(config.mapStatusField(entry.getKey()), entry.getValue());
             }
         }

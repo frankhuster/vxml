@@ -47,9 +47,9 @@ public class CallDetailRecord {
         callStatus = CallStatus.UNKNOWN;
     }
 
-    public CallDetailRecord(String timestamp, String configName, String from, String to, CallDirection callDirection,
-                            CallStatus callStatus, String motechCallId, String providerCallId,
-                            Map<String, String> providerExtraData) {
+    public CallDetailRecord(String timestamp, String configName,  //NO CHECKSTYLE ParameterNumber
+                            String from, String to, CallDirection callDirection, CallStatus callStatus,
+                            String motechCallId, String providerCallId, Map<String, String> providerExtraData) {
         this();
         this.timestamp = timestamp;
         this.configName = configName;
@@ -126,13 +126,17 @@ public class CallDetailRecord {
      * CallDetailRecord map field.
      *
      * @param key
-     * @param value
+     * @param val
      */
-    public void setField(String key, String value) {
-        if (value.length() > MAX_ENTITY_STRING_LENGTH) {
+    public void setField(String key, String val) {
+        String value;
+
+        if (val.length() > MAX_ENTITY_STRING_LENGTH) {
             logger.warn("The value for {} exceeds {} characters and will be truncated.", key, MAX_ENTITY_STRING_LENGTH);
-            logger.warn("The complete value for {} is {}", key, value);
-            value = value.substring(0, MAX_ENTITY_STRING_LENGTH);
+            logger.warn("The complete value for {} is {}", key, val);
+            value = val.substring(0, MAX_ENTITY_STRING_LENGTH);
+        }  else {
+            value = val;
         }
 
         try {
@@ -148,19 +152,16 @@ public class CallDetailRecord {
                         providerExtraData.put(key, value);
                         object = CallStatus.UNKNOWN;
                     }
-                }
-                else if ("callDirection".equals(key)) {
+                } else if ("callDirection".equals(key)) {
                     try {
-                        CallDirection callDirection = CallDirection.valueOf(value);
-                        object = callDirection;
+                        object = CallDirection.valueOf(value);
                     } catch (IllegalArgumentException e) {
                         // Always add unknown call directions to the provider extra data, for inspection
                         logger.warn("Unknown callDirection: {}", value);
                         providerExtraData.put(key, value);
                         object = CallDirection.UNKNOWN;
                     }
-                }
-                else {
+                } else {
                     object = value;
                 }
                 field.set(this, object);
@@ -176,24 +177,25 @@ public class CallDetailRecord {
         }
     }
 
-    @Override
+    @Override //NO CHECKSTYLE CyclomaticComplexity
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof CallDetailRecord)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof CallDetailRecord)) {
+            return false;
+        }
 
         CallDetailRecord that = (CallDetailRecord) o;
 
-        if (callDirection != that.callDirection) return false;
-        if (callStatus != that.callStatus) return false;
-        if (!configName.equals(that.configName)) return false;
-        if (from != null ? !from.equals(that.from) : that.from != null) return false;
-        if (motechCallId != null ? !motechCallId.equals(that.motechCallId) : that.motechCallId != null) return false;
-        if (providerCallId != null ? !providerCallId.equals(that.providerCallId) : that.providerCallId != null)
+        if ((callDirection != that.callDirection) ||  (callStatus != that.callStatus) ||
+            (!configName.equals(that.configName)) || (from != null ? !from.equals(that.from) : that.from != null) ||
+            (motechCallId != null ? !motechCallId.equals(that.motechCallId) : that.motechCallId != null) ||
+            (providerCallId != null ? !providerCallId.equals(that.providerCallId) : that.providerCallId != null) ||
+            (providerExtraData != null ? !providerExtraData.equals(that.providerExtraData) : that.providerExtraData != null) ||
+            (!timestamp.equals(that.timestamp)) || (to != null ? !to.equals(that.to) : that.to != null)) {
             return false;
-        if (providerExtraData != null ? !providerExtraData.equals(that.providerExtraData) :
-                that.providerExtraData != null) return false;
-        if (!timestamp.equals(that.timestamp)) return false;
-        if (to != null ? !to.equals(that.to) : that.to != null) return false;
+        }
 
         return true;
     }
